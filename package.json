@@ -1,0 +1,66 @@
+{
+  "name": "graphql-ccxt",
+  "version": "0.0.0",
+  "description": "wake up bears 🐻 ride bulls 🐂",
+  "main": "src/graphql-ccxt.js",
+  "scripts": {
+    "lint-staged": "lint-staged",
+    "markdown2code": "markdown2code -l javascript README.md > demo.js",
+    "start": "NODE_PATH=src node demo.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fibo/graphql-ccxt.git"
+  },
+  "keywords": [
+    "graphql",
+    "trading",
+    "trade",
+    "crypto",
+    "ccxt",
+    "bitcoin",
+    "ethereum",
+    "btc",
+    "eth",
+    "query"
+  ],
+  "author": {
+    "name": "Gianluca Casati",
+    "url": "http://g14n.info"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fibo/graphql-ccxt/issues"
+  },
+  "homepage": "http://g14n.info/graphql-ccxt",
+  "dependencies": {
+    "ccxt": "^1.44.4",
+    "read-file-utf8": "^2.0.4"
+  },
+  "peerDependencies": {
+    "graphql": ">= 15.x"
+  },
+  "devDependencies": {
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.5.0",
+    "lint-staged": "^10.5.4",
+    "markdown2code": "^1.0.2",
+    "pre-commit": "^1.2.2",
+    "prettier": "^2.2.1"
+  },
+  "lint-staged": {
+    "*.{graphql,js,json,html,md}": "prettier --write"
+  },
+  "pre-commit": [
+    "lint-staged"
+  ],
+  "prettier": {
+    "arrowParens": "always",
+    "bracketSpacing": true,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "none"
+  }
+}

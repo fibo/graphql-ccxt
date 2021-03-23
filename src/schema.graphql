@@ -1,0 +1,8 @@
+type Client {
+  key: String!
+  exchange: String!
+}
+
+type Query {
+  clients: [Client]!
+}
