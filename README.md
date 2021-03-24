@@ -6,7 +6,20 @@
 
 Tons of kudos to creators of [GraphQL](https://graphql.org/) and [CCXT](http://ccxt.trade). Coders that implemented both are so smart and passionate, for sure a great source of inspiration.
 
-## Quick start
+## Installation
+
+Install this package and add the following _peer dependencies_:
+
+- graphql
+- ccxt
+
+For instance with [npm](https://www.npmjs.com/) launch
+
+```bash
+npm install graphql ccxt graphql-ccxt
+```
+
+## Demo
 
 0. Get [this repository](https://github.com/fibo/graphql-ccxt) code.
 1. Install deps: `npm install`
@@ -26,7 +39,7 @@ Then point your browser to http://localhost:4000/graphql and try for example the
 
 ![query](media/query.png)
 
-## Demo source code
+### Demo source code
 
 The demo server is implemented by the following code.
 
@@ -55,7 +68,7 @@ async function startDemo() {
         rootValue,
         context,
         graphiql: {
-          defaultQuery: '{ clients: { key } }'
+          defaultQuery: '{ clients { key } }'
         }
       })
     )

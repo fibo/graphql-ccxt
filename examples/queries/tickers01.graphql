@@ -1,0 +1,9 @@
+{
+  client(key: "binance") {
+    exchange
+    tickers(symbols: ["BTC/USDT", "ETH/USDT"]) {
+      symbol
+      last
+    }
+  }
+}

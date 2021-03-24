@@ -2,7 +2,7 @@ const express = require('express')
 const { graphqlHTTP } = require('express-graphql')
 const { makeSchema, queries, GraphqlCcxtContext } = require('graphql-ccxt')
 
-async function startDemo() {
+async function startDemo () {
   const context = new GraphqlCcxtContext()
   await context.addClient({ exchange: 'binance' })
 
