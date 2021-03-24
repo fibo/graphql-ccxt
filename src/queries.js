@@ -1,22 +1,36 @@
-const clientInstanceToData = (clientsMap) => (key) => {
-  const client = clientsMap.get(key)
-  const exchange = client.id
+const { PublicClient } = require('./PublicClient.js')
+const { PrivateClient } = require('./PrivateClient.js')
 
-  return {
-    key,
-    exchange
-  }
+const clientInstance = (clientsMap, ClientClass) => (key) => {
+  const ccxtClient = clientsMap.get(key)
+
+  return new ClientClass({
+    ccxtClient,
+    key
+  })
 }
 
 const queries = {
-  clients: (_, { publicClients, privateClients }) =>
-    Array.from(publicClients.keys())
-      .map(clientInstanceToData(publicClients))
-      .concat(
-        Array.from(privateClients.keys()).map(
-          clientInstanceToData(privateClients)
-        )
-      )
+  client: ({ key }, { publicClients, privateClients }) => {
+    if (publicClients.has(key)) {
+      return clientInstance(publicClients, PublicClient)(key)
+    }
+
+    if (privateClients.has(key)) {
+      return clientInstance(privateClients, PrivateClient)(key)
+    }
+  },
+  clients: (_, { publicClients, privateClients }) => {
+    const publicClientsInstances = Array.from(publicClients.keys()).map(
+      clientInstance(publicClients, PublicClient)
+    )
+
+    const privateClientsInstances = Array.from(privateClients.keys()).map(
+      clientInstance(privateClients, PrivateClient)
+    )
+
+    return publicClientsData.concat(privateClientsData)
+  }
 }
 
 module.exports = {

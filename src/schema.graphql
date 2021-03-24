@@ -1,8 +1,16 @@
+type Ticker {
+  symbol: String!
+  last: Float
+}
+
 type Client {
   key: String!
   exchange: String!
+  ticker(symbol: String!): Ticker
 }
 
 type Query {
+  client(key: String!): Client
+
   clients: [Client]!
 }

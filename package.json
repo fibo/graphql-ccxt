@@ -6,6 +6,8 @@
   "scripts": {
     "lint-staged": "lint-staged",
     "markdown2code": "markdown2code -l javascript README.md > demo.js",
+    "postversion": "git push origin v${npm_package_version}; npm publish",
+    "postpublish": "git commit -am ':arrow_up: updated version'; git push origin main",
     "start": "NODE_PATH=src node demo.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

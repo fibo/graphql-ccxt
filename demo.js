@@ -4,7 +4,7 @@ const { makeSchema, queries, GraphqlCcxtContext } = require('graphql-ccxt')
 
 async function startDemo() {
   const context = new GraphqlCcxtContext()
-  context.addClient({ exchange: 'binance' })
+  await context.addClient({ exchange: 'binance' })
 
   const rootValue = {
     ...queries

@@ -6,7 +6,7 @@ class GraphqlCcxtContext {
     this.privateClients = new Map()
   }
 
-  addClient({ exchange, timeout = 3000, apiKey, secret, uid }) {
+  async addClient({ exchange, timeout = 3000, apiKey, secret, uid }) {
     const { publicClients } = this
 
     const noApiKey = typeof apiKey === 'undefined'
@@ -24,6 +24,8 @@ class GraphqlCcxtContext {
         enableRateLimit: true,
         timeout
       })
+
+      await client.loadMarkets()
 
       publicClients.set(exchange, client)
     }
