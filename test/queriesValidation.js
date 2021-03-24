@@ -3,7 +3,7 @@ const { parse } = require('graphql')
 const { validate } = require('graphql/validation')
 const { makeSchema } = require('graphql-ccxt')
 
-const { queries } = require('../examples/queries/index.js')
+const { readExampleQueries } = require('../examples/queries/index.js')
 
 // Keep in sync with queries documented in README.md
 const defaultQuery = '{ clients { key } }'
@@ -18,11 +18,26 @@ const exampleQuery = `{
 async function validateQueries () {
   const schema = await makeSchema()
 
-  // Add queries documented in README.md to queries from folder examples/queries/
-  queries['README defaultQuery'] = Promise.resolve(defaultQuery)
-  queries['README example query'] = Promise.resolve(exampleQuery)
+  const exampleQueries = await readExampleQueries()
 
-  for await (const [queryKey, readQuery] of Object.entries(queries)) {
+  // Add queries documented in README.md to queries from folder examples/queries/
+  const allQueries = [
+    {
+      queryKey: 'README defaultQuery',
+      readQuery: Promise.resolve(defaultQuery)
+    },
+    {
+      queryKey: 'README example query',
+      readQuery: Promise.resolve(exampleQuery)
+    }
+  ].concat(
+    exampleQueries.map(({ fileName, readFile }) => ({
+      queryKey: fileName.replace(/\.graphql$/, ''),
+      readQuery: readFile
+    }))
+  )
+
+  for await (const { queryKey, readQuery } of allQueries) {
     test(`${queryKey} query validation`, async (t) => {
       const query = await readQuery
 
