@@ -1,5 +1,5 @@
 class Ticker {
-  constructor({ symbol, last }) {
+  constructor ({ data: { symbol, last } }) {
     this.symbol = symbol
     this.last = last
   }

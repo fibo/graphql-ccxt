@@ -1,0 +1,10 @@
+{
+  client(key: "binance") {
+    balance {
+      free {
+        currency
+        value
+      }
+    }
+  }
+}

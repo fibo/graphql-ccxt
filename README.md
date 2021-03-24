@@ -39,6 +39,13 @@ Then point your browser to http://localhost:4000/graphql and try for example the
 
 ![query](media/query.png)
 
+### Access private API
+
+**Optionally**, before launching the demo server, set the following environment variables accordingly:
+
+- `BINANCE_APIKEY`
+- `BINANCE_APISECRET`
+
 ### Demo source code
 
 The demo server is implemented by the following code.
@@ -50,7 +57,11 @@ const { makeSchema, queries, GraphqlCcxtContext } = require('graphql-ccxt')
 
 async function startDemo() {
   const context = new GraphqlCcxtContext()
-  await context.addClient({ exchange: 'binance' })
+  await context.addClient({
+    exchange: 'binance',
+    apiKey: process.env.BINANCE_APIKEY,
+    secret: process.env.BINANCE_APISECRET
+  })
 
   const rootValue = {
     ...queries

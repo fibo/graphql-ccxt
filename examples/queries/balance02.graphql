@@ -1,0 +1,10 @@
+{
+  client(key: "binance") {
+    balance(currencies: ["BTC", "ETH"]) {
+      total {
+        currency
+        value
+      }
+    }
+  }
+}

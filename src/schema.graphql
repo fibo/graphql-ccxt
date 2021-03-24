@@ -1,4 +1,13 @@
-scalar Symbol
+type Amount {
+  currency: String!
+  value: Float!
+}
+
+type Balance {
+  free: [Amount]
+  total: [Amount]
+  used: [Amount]
+}
 
 type Ticker {
   symbol: String!
@@ -7,9 +16,10 @@ type Ticker {
 
 type Client {
   key: String!
+  balance(currencies: [String]): Balance
   exchange: String!
-  ticker(symbol: Symbol!): Ticker
-  tickers(symbols: [Symbol]): [Ticker]
+  ticker(symbol: String!): Ticker
+  tickers(symbols: [String]): [Ticker]
 }
 
 type Query {

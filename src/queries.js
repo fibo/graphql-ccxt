@@ -1,5 +1,5 @@
-const { PublicClient } = require('./PublicClient.js')
-const { PrivateClient } = require('./PrivateClient.js')
+const { PublicClient } = require('./ccxtClient/PublicClient.js')
+const { PrivateClient } = require('./ccxtClient/PrivateClient.js')
 
 const clientInstance = (clientsMap, ClientClass) => (key) => {
   const ccxtClient = clientsMap.get(key)
