@@ -29,7 +29,7 @@ const queries = {
       clientInstance(privateClients, PrivateClient)
     )
 
-    return publicClientsData.concat(privateClientsData)
+    return publicClientsInstances.concat(privateClientsInstances)
   }
 }
 

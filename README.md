@@ -55,7 +55,7 @@ async function startDemo() {
         rootValue,
         context,
         graphiql: {
-          defaultQuery: '{ clients }'
+          defaultQuery: '{ clients: { key } }'
         }
       })
     )
