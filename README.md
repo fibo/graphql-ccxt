@@ -17,7 +17,6 @@ Then point your browser to http://localhost:4000/graphql and try for example the
 ```graphql
 {
   client(key: "binance") {
-    key
     ticker(symbol: "BTC/USDT") {
       last
     }
