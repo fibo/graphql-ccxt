@@ -6,13 +6,30 @@ class GraphqlCcxtContext {
     this.privateClients = new Map()
   }
 
-  async addClient ({ exchange, timeout = 3000, apiKey, secret, uid }) {
+  static clientKey (exchange, label) {
+    const noLabel = typeof label !== 'string'
+    return noLabel ? exchange : `${exchange}:${label}`
+  }
+
+  async addClient ({
+    // Client identifiers.
+    exchange,
+    label,
+    // Private API params.
+    apiKey,
+    secret,
+    uid,
+    // Other params.
+    timeout = 3000
+  }) {
     const { publicClients, privateClients } = this
+
+    const clientKey = GraphqlCcxtContext.clientKey(exchange, label)
 
     const noApiKey = typeof apiKey === 'undefined'
     const noSecret = typeof secret === 'undefined'
 
-    const isPublic = noApiKey && noSecret
+    const isPublic = noApiKey || noSecret
 
     const ClientClass = ccxt[exchange]
 
@@ -27,7 +44,7 @@ class GraphqlCcxtContext {
 
       await client.loadMarkets()
 
-      publicClients.set(exchange, client)
+      publicClients.set(clientKey, client)
     } else {
       const client = new ClientClass({
         enableRateLimit: true,
@@ -39,7 +56,7 @@ class GraphqlCcxtContext {
 
       await client.loadMarkets()
 
-      privateClients.set(exchange, client)
+      privateClients.set(clientKey, client)
     }
   }
 }

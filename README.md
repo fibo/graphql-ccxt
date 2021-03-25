@@ -4,7 +4,7 @@
 
 ## Credits
 
-Tons of kudos to creators of [GraphQL](https://graphql.org/) and [CCXT](http://ccxt.trade). Coders that implemented both are so smart and passionate, for sure a great source of inspiration.
+Tons of kudos to creators of [GraphQL](https://graphql.org/) and [CCXT](http://ccxt.trade). Coders that designed and implemented both projects are so smart and passionate, they are a great example of the power of _open source_.
 
 ## Installation
 
@@ -25,13 +25,13 @@ npm install graphql ccxt graphql-ccxt
 1. Install deps: `npm install`
 2. Launch the demo: `npm start`
 
-Then point your browser to http://localhost:4000/graphql and try for example the following query
+Then point your browser to http://localhost:4000/graphql and try some query, take a look to [examples/queries/](https://github.com/fibo/graphql-ccxt/tree/main/examples/queries) folder.
 
 ![query](media/query.png)
 
 ### Access private API
 
-**Optionally**, before launching the demo server, set the following environment variables accordingly:
+**Optionally**, before launching the _demo server_, set the following environment variables accordingly:
 
 - `BINANCE_APIKEY`
 - `BINANCE_APISECRET`
@@ -44,7 +44,11 @@ The demo server is implemented by the following code.
 const express = require('express')
 const { graphqlHTTP } = require('express-graphql')
 const { buildSchema } = require('graphql')
-const { schemaSource, queries, GraphqlCcxtContext } = require('graphql-ccxt')
+const {
+  graphqlCcxtSchemaSource,
+  graphqlCcxtQueries,
+  GraphqlCcxtContext
+} = require('graphql-ccxt')
 
 async function startDemo() {
   const context = new GraphqlCcxtContext()
@@ -55,10 +59,10 @@ async function startDemo() {
   })
 
   const rootValue = {
-    ...queries
+    ...graphqlCcxtQueries
   }
 
-  const schema = buildSchema(schemaSource)
+  const schema = buildSchema(graphqlCcxtSchemaSource)
 
   const port = 4000
 
@@ -70,7 +74,7 @@ async function startDemo() {
         rootValue,
         context,
         graphiql: {
-          defaultQuery: '{ clients { key } }'
+          defaultQuery: '{ clients { exchange } }'
         }
       })
     )
@@ -82,6 +86,49 @@ async function startDemo() {
 }
 
 startDemo()
+```
+
+## Schema
+
+This is the _graphql-ccxt_ schema.
+
+```graphql
+type Amount {
+  currency: String!
+  value: Float!
+}
+
+type Balance {
+  free: [Amount]
+  total: [Amount]
+  used: [Amount]
+}
+
+type Ticker {
+  symbol: String!
+  last: Float
+}
+
+type Client {
+  """
+  A client is identified at first by the exchange id, e.g. "binance".
+  """
+  exchange: String!
+  """
+  The label is optionally used to distinguish two clients on the same exchange.
+  """
+  label: String
+
+  balance(currencies: [String]): Balance
+  ticker(symbol: String!): Ticker
+  tickers(symbols: [String]): [Ticker]
+}
+
+type Query {
+  client(exchange: String!, label: String): Client
+
+  clients: [Client]!
+}
 ```
 
 ## License

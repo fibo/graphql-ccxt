@@ -1,15 +1,15 @@
 const test = require('ava')
 const { buildSchema, parse } = require('graphql')
 const { validate } = require('graphql/validation')
-const { schemaSource } = require('graphql-ccxt')
+const { graphqlCcxtSchemaSource } = require('graphql-ccxt')
 
 const { readExampleQueries } = require('../examples/queries/index.js')
 
 // Keep in sync with defaultQuery documented in README.md
-const defaultQuery = '{ clients { key } }'
+const defaultQuery = '{ clients { exchange } }'
 
 async function validateQueries () {
-  const schema = buildSchema(schemaSource)
+  const schema = buildSchema(graphqlCcxtSchemaSource)
 
   const exampleQueries = await readExampleQueries()
 

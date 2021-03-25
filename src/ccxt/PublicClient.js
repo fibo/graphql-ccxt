@@ -1,9 +1,9 @@
 const { GraphQLError } = require('graphql')
 
-const { Ticker } = require('../types/Ticker.js')
-const { clientCapability } = require('./clientCapabilities')
+const { Ticker } = require('../models/Ticker.js')
+const { ccxtClientCapability } = require('./clientCapabilities')
 
-class PublicClient {
+class CcxtPublicClient {
   constructor ({ ccxtClient, key }) {
     this.ccxtClient = ccxtClient
     this.key = key
@@ -20,24 +20,16 @@ class PublicClient {
     }
   }
 
-  _throwPrivateCapabilityNotAvailable (capability) {
-    throw GraphQLError(`Public client has no "${capability}" capability`)
-  }
-
-  balance () {
-    this._throwPrivateCapabilityNotAvailable(clientCapability.fetchBalance)
-  }
-
   async ticker ({ symbol }) {
-    const method = this._hasCapabilityOrThrow(clientCapability.fetchTicker)
+    const method = this._hasCapabilityOrThrow(ccxtClientCapability.fetchTicker)
 
     const data = await this.ccxtClient[method](symbol)
 
-    return new Ticker(data)
+    return new Ticker({ data })
   }
 
   async tickers ({ symbols }) {
-    const method = this._hasCapabilityOrThrow(clientCapability.fetchTickers)
+    const method = this._hasCapabilityOrThrow(ccxtClientCapability.fetchTickers)
 
     const data = await this.ccxtClient[method](symbols)
 
@@ -45,4 +37,4 @@ class PublicClient {
   }
 }
 
-module.exports = { PublicClient }
+module.exports = { CcxtPublicClient }

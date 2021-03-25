@@ -1,5 +1,5 @@
 {
-  client(key: "binance") {
+  client(exchange: "binance") {
     ticker(symbol: "BTC/USDT") {
       last
     }

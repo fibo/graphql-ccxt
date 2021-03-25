@@ -1,5 +1,5 @@
 {
-  client(exchange: "binance") {
+  client(exchange: "binance", label: "My main binance") {
     ticker(symbol: "BTC/USDT") {
       last
     }

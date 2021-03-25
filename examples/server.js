@@ -1,7 +1,11 @@
 const express = require('express')
 const { graphqlHTTP } = require('express-graphql')
 const { buildSchema } = require('graphql')
-const { schemaSource, queries, GraphqlCcxtContext } = require('graphql-ccxt')
+const {
+  graphqlCcxtSchemaSource,
+  graphqlCcxtQueries,
+  GraphqlCcxtContext
+} = require('graphql-ccxt')
 
 async function startDemo () {
   const context = new GraphqlCcxtContext()
@@ -12,10 +16,10 @@ async function startDemo () {
   })
 
   const rootValue = {
-    ...queries
+    ...graphqlCcxtQueries
   }
 
-  const schema = buildSchema(schemaSource)
+  const schema = buildSchema(graphqlCcxtSchemaSource)
 
   const port = 4000
 
