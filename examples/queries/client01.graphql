@@ -1,0 +1,7 @@
+{
+  client(key: "binance") {
+    ticker(symbol: "BTC/USDT") {
+      last
+    }
+  }
+}

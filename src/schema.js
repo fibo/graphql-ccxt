@@ -1,15 +1,35 @@
-const { buildSchema } = require('graphql')
-const path = require('path')
-const read = require('read-file-utf8')
-
-async function makeSchema() {
-  const schemaFilepath = path.join(__dirname, 'schema.graphql')
-
-  const schemaSource = await read(schemaFilepath)
-
-  return buildSchema(schemaSource)
+const schemaSource = `
+type Amount {
+  currency: String!
+  value: Float!
 }
 
+type Balance {
+  free: [Amount]
+  total: [Amount]
+  used: [Amount]
+}
+
+type Ticker {
+  symbol: String!
+  last: Float
+}
+
+type Client {
+  key: String!
+  balance(currencies: [String]): Balance
+  exchange: String!
+  ticker(symbol: String!): Ticker
+  tickers(symbols: [String]): [Ticker]
+}
+
+type Query {
+  client(key: String!): Client
+
+  clients: [Client]!
+}
+`
+
 module.exports = {
-  makeSchema
+  schemaSource
 }

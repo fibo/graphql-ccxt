@@ -1,22 +1,15 @@
 const test = require('ava')
-const { parse } = require('graphql')
+const { buildSchema, parse } = require('graphql')
 const { validate } = require('graphql/validation')
-const { makeSchema } = require('graphql-ccxt')
+const { schemaSource } = require('graphql-ccxt')
 
 const { readExampleQueries } = require('../examples/queries/index.js')
 
-// Keep in sync with queries documented in README.md
+// Keep in sync with defaultQuery documented in README.md
 const defaultQuery = '{ clients { key } }'
-const exampleQuery = `{
-  client(key: "binance") {
-    ticker(symbol: "BTC/USDT") {
-      last
-    }
-  }
-}`
 
 async function validateQueries () {
-  const schema = await makeSchema()
+  const schema = buildSchema(schemaSource)
 
   const exampleQueries = await readExampleQueries()
 
@@ -25,10 +18,6 @@ async function validateQueries () {
     {
       queryKey: 'README defaultQuery',
       readQuery: Promise.resolve(defaultQuery)
-    },
-    {
-      queryKey: 'README example query',
-      readQuery: Promise.resolve(exampleQuery)
     }
   ].concat(
     exampleQueries.map(({ fileName, readFile }) => ({

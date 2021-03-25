@@ -27,16 +27,6 @@ npm install graphql ccxt graphql-ccxt
 
 Then point your browser to http://localhost:4000/graphql and try for example the following query
 
-```graphql
-{
-  client(key: "binance") {
-    ticker(symbol: "BTC/USDT") {
-      last
-    }
-  }
-}
-```
-
 ![query](media/query.png)
 
 ### Access private API
@@ -53,7 +43,8 @@ The demo server is implemented by the following code.
 ```javascript
 const express = require('express')
 const { graphqlHTTP } = require('express-graphql')
-const { makeSchema, queries, GraphqlCcxtContext } = require('graphql-ccxt')
+const { buildSchema } = require('graphql')
+const { schemaSource, queries, GraphqlCcxtContext } = require('graphql-ccxt')
 
 async function startDemo() {
   const context = new GraphqlCcxtContext()
@@ -67,7 +58,7 @@ async function startDemo() {
     ...queries
   }
 
-  const schema = await makeSchema()
+  const schema = buildSchema(schemaSource)
 
   const port = 4000
 
