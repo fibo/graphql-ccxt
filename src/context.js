@@ -1,9 +1,12 @@
 const ccxt = require('ccxt')
 
+const { CcxtPublicClient } = require('./ccxt/PublicClient.js')
+const { CcxtPrivateClient } = require('./ccxt/PrivateClient.js')
+
 class GraphqlCcxtContext {
   constructor () {
-    this.publicClients = new Map()
-    this.privateClients = new Map()
+    this.publicClientsMap = new Map()
+    this.privateClientsMap = new Map()
   }
 
   static clientKey (exchange, label) {
@@ -20,44 +23,68 @@ class GraphqlCcxtContext {
     secret,
     uid,
     // Other params.
-    timeout = 3000
+    enableRateLimit = true,
+    timeout = 30000,
+    ...otherCcxtExchangeParams
   }) {
-    const { publicClients, privateClients } = this
+    const { publicClientsMap, privateClientsMap } = this
 
     const clientKey = GraphqlCcxtContext.clientKey(exchange, label)
+
+    // Do not create a public client instance twice.
+    if (publicClientsMap.has(clientKey) || privateClientsMap.has(clientKey)) {
+      return
+    }
 
     const noApiKey = typeof apiKey === 'undefined'
     const noSecret = typeof secret === 'undefined'
 
     const isPublic = noApiKey || noSecret
 
-    const ClientClass = ccxt[exchange]
+    const CcxtExchange = ccxt[exchange]
+
+    const ccxtExchange = new CcxtExchange({
+      enableRateLimit,
+      apiKey,
+      secret,
+      uid,
+      timeout,
+      ...otherCcxtExchangeParams
+    })
+
+    await ccxtExchange.loadMarkets()
 
     if (isPublic) {
-      // Do not create a public client instance twice.
-      if (publicClients.has(exchange)) return
+      const client = new CcxtPublicClient({ ccxtExchange, label })
 
-      const client = new ClientClass({
-        enableRateLimit: true,
-        timeout
-      })
-
-      await client.loadMarkets()
-
-      publicClients.set(clientKey, client)
+      publicClientsMap.set(clientKey, client)
     } else {
-      const client = new ClientClass({
-        enableRateLimit: true,
-        timeout,
-        apiKey,
-        secret,
-        uid
-      })
+      const client = new CcxtPrivateClient({ ccxtExchange, label })
 
-      await client.loadMarkets()
-
-      privateClients.set(clientKey, client)
+      privateClientsMap.set(clientKey, client)
     }
+  }
+
+  getClientInstanceByKey (clientKey) {
+    const { publicClientsMap, privateClientsMap } = this
+
+    if (publicClientsMap.has(clientKey)) {
+      return publicClientsMap.get(clientKey)
+    }
+
+    if (privateClientsMap.has(clientKey)) {
+      return privateClientsMap.get(clientKey)
+    }
+  }
+
+  getClientsInstances () {
+    const { publicClientsMap, privateClientsMap } = this
+
+    const publicClientsInstances = Array.from(publicClientsMap.values())
+
+    const privateClientsInstances = Array.from(privateClientsMap.values())
+
+    return publicClientsInstances.concat(privateClientsInstances)
   }
 }
 

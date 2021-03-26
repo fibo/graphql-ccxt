@@ -1,9 +1,10 @@
-const ccxtClientCapability = {
+const ccxtExchangeCapability = {
+  createOrder: 'createOrder',
   fetchBalance: 'fetchBalance',
   fetchTicker: 'fetchTicker',
   fetchTickers: 'fetchTickers'
 }
 
 module.exports = {
-  ccxtClientCapability
+  ccxtExchangeCapability
 }

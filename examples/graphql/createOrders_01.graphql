@@ -1,0 +1,22 @@
+mutation {
+  createOrders(
+    list: [
+      {
+        client: { exchange: "binance" }
+        orders: [
+          { type: MARKET, side: BUY, symbol: "BTC/BUSD", amount: 0.1 }
+          { type: MARKET, side: BUY, symbol: "ETH/BUSD", amount: 1 }
+        ]
+      }
+    ]
+  ) {
+    client {
+      exchange
+    }
+    orders {
+      symbol
+      price
+      datetime
+    }
+  }
+}

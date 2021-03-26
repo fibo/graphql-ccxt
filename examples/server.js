@@ -2,9 +2,9 @@ const express = require('express')
 const { graphqlHTTP } = require('express-graphql')
 const { buildSchema } = require('graphql')
 const {
-  graphqlCcxtSchemaSource,
-  graphqlCcxtQueries,
-  GraphqlCcxtContext
+  GraphqlCcxtContext,
+  graphqlCcxtRoot,
+  graphqlCcxtSchemaSource
 } = require('graphql-ccxt')
 
 async function startDemo () {
@@ -15,10 +15,6 @@ async function startDemo () {
     secret: process.env.BINANCE_APISECRET
   })
 
-  const rootValue = {
-    ...graphqlCcxtQueries
-  }
-
   const schema = buildSchema(graphqlCcxtSchemaSource)
 
   const port = 4000
@@ -28,10 +24,10 @@ async function startDemo () {
       '/graphql',
       graphqlHTTP({
         schema,
-        rootValue,
+        rootValue: graphqlCcxtRoot,
         context,
         graphiql: {
-          defaultQuery: '{ clients { key } }'
+          defaultQuery: '{ clients { exchange } }'
         }
       })
     )

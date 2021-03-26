@@ -5,4 +5,6 @@ class Amount {
   }
 }
 
-module.exports = { Amount }
+module.exports = {
+  Amount
+}

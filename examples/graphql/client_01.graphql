@@ -1,6 +1,6 @@
 {
   client(exchange: "binance") {
-    ticker(symbol: "BTC/USDT") {
+    ticker(symbol: "BTC/BUSD") {
       last
     }
   }

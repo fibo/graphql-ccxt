@@ -25,9 +25,19 @@ npm install graphql ccxt graphql-ccxt
 1. Install deps: `npm install`
 2. Launch the demo: `npm start`
 
-Then point your browser to http://localhost:4000/graphql and try some query, take a look to [examples/queries/](https://github.com/fibo/graphql-ccxt/tree/main/examples/queries) folder.
+Then point your browser to http://localhost:4000/graphql
 
 ![query](media/query.png)
+
+Take a look to [examples/graphql/](https://github.com/fibo/graphql-ccxt/tree/main/examples/graphql) folder.
+It contains both queries and mutations, among others:
+
+- [fetch Bitcoin price](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/ticker_01.graphql)
+- [fetch multiple prices, Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/tickers_01.graphql)
+- [fetch your balance](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/balance_01.graphql)
+- [fetch your balance, only Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/balance_02.graphql)
+- [create an order](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrder_01.graphql)
+- [create multiple orders on multiple exchanges](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrders_01.graphql)
 
 ### Access private API
 
@@ -45,9 +55,9 @@ const express = require('express')
 const { graphqlHTTP } = require('express-graphql')
 const { buildSchema } = require('graphql')
 const {
-  graphqlCcxtSchemaSource,
-  graphqlCcxtQueries,
-  GraphqlCcxtContext
+  GraphqlCcxtContext,
+  graphqlCcxtRoot,
+  graphqlCcxtSchemaSource
 } = require('graphql-ccxt')
 
 async function startDemo() {
@@ -58,10 +68,6 @@ async function startDemo() {
     secret: process.env.BINANCE_APISECRET
   })
 
-  const rootValue = {
-    ...graphqlCcxtQueries
-  }
-
   const schema = buildSchema(graphqlCcxtSchemaSource)
 
   const port = 4000
@@ -71,7 +77,7 @@ async function startDemo() {
       '/graphql',
       graphqlHTTP({
         schema,
-        rootValue,
+        rootValue: graphqlCcxtRoot,
         context,
         graphiql: {
           defaultQuery: '{ clients { exchange } }'
@@ -93,6 +99,9 @@ startDemo()
 This is the _graphql-ccxt_ schema.
 
 ```graphql
+# Data definition
+#######################################################################
+
 type Amount {
   currency: String!
   value: Float!
@@ -109,25 +118,135 @@ type Ticker {
   last: Float
 }
 
+enum OrderType {
+  LIMIT
+  MARKET
+}
+
+enum OrderSide {
+  BUY
+  SELL
+}
+
+enum OrderStatus {
+  CANCELED
+  CLOSED
+  EXPIRED
+  OPEN
+}
+
+type Order {
+  # Params of "createOrder" method.
+
+  """
+  Currency pair symbol, e.g. BTC/ETH.
+  """
+  symbol: String
+  """
+  Can be MARKET, LIMIT.
+  """
+  type: OrderType
+  """
+  Can be BUY, SELL.
+  """
+  side: OrderSide
+  """
+  ordered amount of base currency
+  """
+  amount: Float
+  """
+  float price in quote currency (may be empty for market orders)
+  """
+  price: Float
+
+  # Data from exchange, once order is created.
+
+  """
+  'filled' * 'price' (filling price used where available)
+  """
+  cost: Float
+  """
+  ISO8601 datetime of 'timestamp' with milliseconds
+  """
+  datetime: String
+  """
+  Filled amount of base currency.
+  """
+  filled: Float
+  """
+  Unix timestamp of the most recent trade on this order.
+  """
+  lastTradeTimestamp: Int
+  """
+  remaining amount to fill
+  """
+  remaining: Float
+  """
+  Can be OPEN, CLOSED, CANCELED, EXPIRED.
+  """
+  status: OrderStatus
+  """
+  Order placing/opening Unix timestamp in milliseconds.
+  """
+  timestamp: Int
+}
+
 type Client {
   """
   A client is identified at first by the exchange id, e.g. "binance".
   """
   exchange: String!
   """
-  The label is optionally used to distinguish two clients on the same exchange.
+  A label is optionally used to distinguish two clients on the same exchange.
   """
   label: String
 
-  balance(currencies: [String]): Balance
+  # Public API
+
   ticker(symbol: String!): Ticker
   tickers(symbols: [String]): [Ticker]
+
+  # Private API
+
+  balance(currencies: [String]): Balance
 }
 
 type Query {
   client(exchange: String!, label: String): Client
 
   clients: [Client]!
+}
+
+# Data manipulation
+#######################################################################
+
+input OrderInput {
+  symbol: String!
+  type: OrderType!
+  side: OrderSide!
+  amount: Float!
+  price: Float
+}
+
+input ClientInput {
+  exchange: String!
+  label: String
+}
+
+input OrdersInput {
+  client: ClientInput!
+  orders: [OrderInput!]!
+}
+
+type OrdersOutput {
+  client: Client
+  orders: [Order]
+}
+
+type Mutation {
+  createOrder(client: ClientInput!, order: OrderInput!): Order
+  # Can create multiple orders on multiple exchanges. 🤩
+  createOrders(list: [OrdersInput]): [OrdersOutput]
 }
 ```
 

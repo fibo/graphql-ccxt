@@ -1,0 +1,10 @@
+mutation {
+  createOrder(
+    client: { exchange: "binance" }
+    order: { type: MARKET, side: BUY, symbol: "BTC/BUSD", amount: 1 }
+  ) {
+    datetime
+    status
+    price
+  }
+}

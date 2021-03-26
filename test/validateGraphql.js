@@ -3,15 +3,15 @@ const { buildSchema, parse } = require('graphql')
 const { validate } = require('graphql/validation')
 const { graphqlCcxtSchemaSource } = require('graphql-ccxt')
 
-const { readExampleQueries } = require('../examples/queries/index.js')
+const { readGraphqlExamples } = require('../examples/graphql/index.js')
 
 // Keep in sync with defaultQuery documented in README.md
 const defaultQuery = '{ clients { exchange } }'
 
-async function validateQueries () {
+async function validateGraphqlExamples () {
   const schema = buildSchema(graphqlCcxtSchemaSource)
 
-  const exampleQueries = await readExampleQueries()
+  const graphqlExamples = await readGraphqlExamples()
 
   // Add queries documented in README.md to queries from folder examples/queries/
   const allQueries = [
@@ -20,7 +20,7 @@ async function validateQueries () {
       readQuery: Promise.resolve(defaultQuery)
     }
   ].concat(
-    exampleQueries.map(({ fileName, readFile }) => ({
+    graphqlExamples.map(({ fileName, readFile }) => ({
       queryKey: fileName.replace(/\.graphql$/, ''),
       readQuery: readFile
     }))
@@ -47,4 +47,4 @@ async function validateQueries () {
   }
 }
 
-validateQueries()
+validateGraphqlExamples()

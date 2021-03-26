@@ -5,7 +5,7 @@ const path = require('path')
 /**
  * Read all .graphql files in this folder.
  */
-async function readExampleQueries () {
+async function readGraphqlExamples () {
   const filePaths = await fs.readdir(__dirname)
 
   return filePaths
@@ -17,5 +17,5 @@ async function readExampleQueries () {
 }
 
 module.exports = {
-  readExampleQueries
+  readGraphqlExamples
 }

@@ -1,7 +1,7 @@
 {
   client(exchange: "binance") {
     exchange
-    tickers(symbols: ["BTC/USDT", "ETH/USDT"]) {
+    tickers(symbols: ["BTC/BUSD", "ETH/BUSD"]) {
       symbol
       last
     }
