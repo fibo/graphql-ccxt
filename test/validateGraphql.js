@@ -21,8 +21,7 @@ ${errors.map((error) => error.toString()).join('\n')}
 }
 
 async function validateGraphqlExamples () {
-  const schemaSource = await graphqlCcxtSchemaSource()
-  const schema = buildSchema(schemaSource)
+  const schema = buildSchema(graphqlCcxtSchemaSource)
 
   const graphqlExamples = await readGraphqlExamples()
 

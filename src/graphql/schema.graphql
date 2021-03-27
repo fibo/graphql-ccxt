@@ -1,5 +1,4 @@
-# Data definition
-#######################################################################
+# graphql-ccxt
 
 type Amount {
   currency: String!
@@ -52,6 +51,24 @@ input TickerMultiInput {
 type TickerMulti {
   client: ClientKey!
   ticker: Ticker
+}
+
+input OrderInput {
+  symbol: String!
+  type: OrderType!
+  side: OrderSide!
+  amount: Float!
+  price: Float
+}
+
+input OrderMultiInput {
+  client: ClientKeyInput!
+  order: OrderInput!
+}
+
+type OrderMulti {
+  client: Client
+  order: Order
 }
 
 type Order {
@@ -136,27 +153,6 @@ type Query {
   clients: [Client]!
 
   tickerMulti(list: [TickerMultiInput]): [TickerMulti]
-}
-
-# Data manipulation
-#######################################################################
-
-input OrderInput {
-  symbol: String!
-  type: OrderType!
-  side: OrderSide!
-  amount: Float!
-  price: Float
-}
-
-input OrderMultiInput {
-  client: ClientKeyInput!
-  order: OrderInput!
-}
-
-type OrderMulti {
-  client: Client
-  order: Order
 }
 
 type Mutation {

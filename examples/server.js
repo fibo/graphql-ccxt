@@ -25,8 +25,7 @@ async function startDemo () {
 
   // 2. Build GraphQL schema.
   /// /
-  const schemaSource = await graphqlCcxtSchemaSource()
-  const schema = buildSchema(schemaSource)
+  const schema = buildSchema(graphqlCcxtSchemaSource)
 
   // 3. Launch express-graphql server.
   /// /
