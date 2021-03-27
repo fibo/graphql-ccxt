@@ -2,9 +2,14 @@
 
 > wake up bears 🐻 ride bulls 🐂
 
+## Features
+
+- Joins together [GraphQL] and [CCXT]: can fetch prices, read balance, open orders, etc. on multiple exchanges at once.
+- No dependencies other than [graphql](https://www.npmjs.com/package/graphql) and [ccxt](https://www.npmjs.com/package/ccxt) (by the way, installed as peer deps).
+
 ## Credits
 
-Tons of kudos to creators of [GraphQL](https://graphql.org/) and [CCXT](http://ccxt.trade). Coders that designed and implemented both projects are so smart and passionate, they are a great example of the power of _open source_.
+Tons of kudos to creators of [GraphQL] and [CCXT]. Coders that designed and implemented both projects are so smart and passionate, they are a great example of the power of _open source_.
 
 ## Installation
 
@@ -37,7 +42,7 @@ It contains both queries and mutations, among others:
 - [fetch your balance](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/balance_01.graphql)
 - [fetch your balance, only Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/balance_02.graphql)
 - [create an order](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrder_01.graphql)
-- [create multiple orders on multiple exchanges](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrders_01.graphql)
+- [create orders on multiple exchanges](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrdersMulti_01.graphql)
 
 ### Access private API
 
@@ -61,17 +66,28 @@ const {
 } = require('graphql-ccxt')
 
 async function startDemo() {
+  // 1. Create GraphQL context. It holds your exchange clients.
+  ////
   const context = new GraphqlCcxtContext()
+  // Add a public client on Coinbase exchange.
+  await context.addClient({
+    exchange: 'coinbase'
+  })
+  // Add another client on Binance exchange.
+  // It will be private if environment variables are defined, otherwise it will be public.
   await context.addClient({
     exchange: 'binance',
     apiKey: process.env.BINANCE_APIKEY,
     secret: process.env.BINANCE_APISECRET
   })
 
-  const schema = buildSchema(graphqlCcxtSchemaSource)
+  // 2. Build GraphQL schema.
+  ////
+  const schemaSource = await graphqlCcxtSchemaSource()
+  const schema = buildSchema(schemaSource)
 
-  const port = 4000
-
+  // 3. Launch express-graphql server.
+  ////
   express()
     .use(
       '/graphql',
@@ -84,9 +100,9 @@ async function startDemo() {
         }
       })
     )
-    .listen(port, () => {
+    .listen(4000, () => {
       console.log(
-        `Running a graphql-ccxt server at http://localhost:${port}/graphql`
+        'Running a graphql-ccxt server at http://localhost:4000/graphql'
       )
     })
 }
@@ -133,6 +149,26 @@ enum OrderStatus {
   CLOSED
   EXPIRED
   OPEN
+}
+
+input ClientKeyInput {
+  exchange: String!
+  label: String
+}
+
+type ClientKey {
+  exchange: String!
+  label: String
+}
+
+input TickerMultiInput {
+  client: ClientKeyInput!
+  symbol: String!
+}
+
+type TickerMulti {
+  client: ClientKey!
+  ticker: Ticker
 }
 
 type Order {
@@ -215,6 +251,8 @@ type Query {
   client(exchange: String!, label: String): Client
 
   clients: [Client]!
+
+  tickerMulti(list: [TickerMultiInput]): [TickerMulti]
 }
 
 # Data manipulation
@@ -228,28 +266,26 @@ input OrderInput {
   price: Float
 }
 
-input ClientInput {
-  exchange: String!
-  label: String
+input OrderMultiInput {
+  client: ClientKeyInput!
+  order: OrderInput!
 }
 
-input OrdersInput {
-  client: ClientInput!
-  orders: [OrderInput!]!
-}
-
-type OrdersOutput {
+type OrderMulti {
   client: Client
-  orders: [Order]
+  order: Order
 }
 
 type Mutation {
-  createOrder(client: ClientInput!, order: OrderInput!): Order
-  # Can create multiple orders on multiple exchanges. 🤩
-  createOrders(list: [OrdersInput]): [OrdersOutput]
+  # All mutations are private API
+  createOrder(client: ClientKeyInput!, order: OrderInput!): Order
+  createOrderMulti(list: [OrderMultiInput]): [OrderMulti]
 }
 ```
 
 ## License
 
 [MIT](http://g14n.info/mit-license)
+
+[graphql]: https://graphql.org
+[ccxt]: http://ccxt.trade

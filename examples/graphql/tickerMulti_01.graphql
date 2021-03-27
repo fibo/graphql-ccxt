@@ -1,0 +1,16 @@
+{
+  tickerMulti(
+    list: [
+      { client: { exchange: "binance" }, symbol: "BTC/BUSD" }
+      { client: { exchange: "coinbase" }, symbol: "BTC/USD" }
+    ]
+  ) {
+    client {
+      exchange
+    }
+    ticker {
+      symbol
+      last
+    }
+  }
+}

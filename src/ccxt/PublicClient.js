@@ -16,9 +16,15 @@ class CcxtPublicClient {
       return capability
     } else {
       throw new GraphQLError(
-        `Exchange ${this.exchange} has no "${capability}" capability`
+        `Exchange ${this.exchange} has no '${capability}' capability`
       )
     }
+  }
+
+  _throwPrivateApiNotAvailable (capability) {
+    throw new GraphQLError(
+      `Private API '${capability}' not available on ${this.exchange} public client`
+    )
   }
 
   async ticker ({ symbol }) {
@@ -39,6 +45,12 @@ class CcxtPublicClient {
     const data = await this.ccxtExchange[method](symbols)
 
     return Object.values(data).map((data) => new Ticker({ data }))
+  }
+
+  // Follows private APIs, not allowed on public client.
+
+  createOrder () {
+    this._throwPrivateApiNotAvailable(ccxtExchangeCapability.createOrder)
   }
 }
 

@@ -1,46 +1,37 @@
-const { GraphqlCcxtContext } = require('../context.js')
+const {
+  graphqlCcxtQueries: { client: getClient }
+} = require('./queries.js')
 
-function createOrder (
-  { client: { exchange, label }, order: { side, type, symbol, amount } },
-  context
-) {
-  const clientKey = GraphqlCcxtContext.clientKey(exchange, label)
-  const client = context.getClientInstanceByKey(clientKey)
-
+function createOrder (input, context) {
   try {
-    return client.createOrder({ side, type, symbol, amount })
+    const client = getClient(input.client, context)
+    return client.createOrder(input.order)
   } catch (error) {
     console.log(error)
     throw error
   }
 }
 
-async function createOrders ({ list }, context) {
-  const result = []
+async function createOrderMulti ({ list }, context) {
+  const output = []
 
-  for (const { client, orders } of list) {
-    const ordersResult = []
-
-    for await (const order of orders) {
-      try {
-        const orderResult = await this.createOrder({ client, order })
-
-        ordersResult.push(orderResult)
-      } catch (error) {
-        console.log(error)
-        throw error
-      }
+  for await (const input of list) {
+    try {
+      const client = getClient(input.client, context)
+      const order = await client.createOrder(input.order)
+      output.push({ client, order })
+    } catch (error) {
+      console.error(error)
+      throw error
     }
-
-    result.push({ client, orders: ordersResult })
   }
 
-  return result
+  return output
 }
 
 module.exports = {
   graphqlCcxtMutations: {
     createOrder,
-    createOrders
+    createOrderMulti
   }
 }

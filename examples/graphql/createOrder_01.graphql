@@ -1,7 +1,7 @@
 mutation {
   createOrder(
     client: { exchange: "binance" }
-    order: { type: MARKET, side: BUY, symbol: "BTC/BUSD", amount: 1 }
+    order: { type: MARKET, side: BUY, symbol: "BTC/BUSD", amount: 0.28 }
   ) {
     datetime
     status

@@ -1,0 +1,23 @@
+mutation {
+  createOrderMulti(
+    list: [
+      {
+        client: { exchange: "binance" }
+        order: { type: MARKET, side: BUY, symbol: "BTC/BUSD", amount: 0.28 }
+      }
+      {
+        client: { exchange: "coinbase" }
+        order: { type: MARKET, side: BUY, symbol: "BTC/USD", amount: 0.28 }
+      }
+    ]
+  ) {
+    client {
+      exchange
+    }
+    order {
+      symbol
+      price
+      datetime
+    }
+  }
+}

@@ -8,8 +8,21 @@ const { readGraphqlExamples } = require('../examples/graphql/index.js')
 // Keep in sync with defaultQuery documented in README.md
 const defaultQuery = '{ clients { exchange } }'
 
+function graphqlValidationFailed (queryKey, errors) {
+  const numErrors = errors.length
+
+  return `
+Query examples/graphql/${queryKey}.graphql has ${numErrors} error${
+    numErrors === 1 ? '' : 's'
+  }:
+
+${errors.map((error) => error.toString()).join('\n')}
+`
+}
+
 async function validateGraphqlExamples () {
-  const schema = buildSchema(graphqlCcxtSchemaSource)
+  const schemaSource = await graphqlCcxtSchemaSource()
+  const schema = buildSchema(schemaSource)
 
   const graphqlExamples = await readGraphqlExamples()
 
@@ -38,10 +51,7 @@ async function validateGraphqlExamples () {
       if (numErrors === 0) {
         t.pass(queryKey)
       } else {
-        t.fail(`
-  Query ${queryKey} has ${numErrors} error${numErrors === 1 ? '' : 's'}:
-
-  ${errors.map((error) => error.toString()).join('\n')}`)
+        t.fail(graphqlValidationFailed(queryKey, errors))
       }
     })
   }

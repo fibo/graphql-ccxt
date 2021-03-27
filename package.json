@@ -9,10 +9,8 @@
     "lint-staged": "lint-staged",
     "generate:examples/server.js": "markdown2code -l javascript README.md > examples/server.js",
     "generate:src/graphql/schema.graphql": "markdown2code -l graphql README.md > src/graphql/schema.graphql",
-    "generate:src/graphql/schema.js": "node src/npm-scripts/generateSchemaJsModule.js",
     "postversion": "git push origin v${npm_package_version}; npm publish",
     "postpublish": "git commit -am ':arrow_up: updated version'; git push origin main",
-    "pregenerate:src/graphql/schema.js": "npm run generate:src/graphql/schema.graphql",
     "start": "npm run example_server",
     "test": "npm run ava"
   },
@@ -63,6 +61,7 @@
   },
   "lint-staged": {
     "*.{graphql,json,md}": "prettier --write",
+    "**/*.graphql": "prettier --write",
     "**/*.js": [
       "prettier --write",
       "standa --fix"
