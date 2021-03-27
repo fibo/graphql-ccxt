@@ -1,6 +1,6 @@
 {
   "name": "graphql-ccxt",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "wake up bears 🐻 ride bulls 🐂",
   "main": "src/graphql-ccxt.js",
   "scripts": {
