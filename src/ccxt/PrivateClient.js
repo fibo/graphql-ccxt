@@ -14,6 +14,16 @@ class CcxtPrivateClient extends CcxtPublicClient {
     return new Balance({ data, filters: { currencies } })
   }
 
+  async closedOrders ({ symbol, since, limit }) {
+    const method = this._hasCapabilityOrThrow(
+      ccxtExchangeCapability.fetchClosedOrders
+    )
+
+    const data = await this.ccxtExchange[method](symbol, since, limit)
+
+    return data.map((item) => new Order({ data: item }))
+  }
+
   async createOrder ({ side, type, symbol, amount, price }) {
     const method = this._hasCapabilityOrThrow(
       ccxtExchangeCapability.createOrder
@@ -36,6 +46,16 @@ class CcxtPrivateClient extends CcxtPublicClient {
     )
 
     return new Order({ data })
+  }
+
+  async openOrders ({ symbol, since, limit }) {
+    const method = this._hasCapabilityOrThrow(
+      ccxtExchangeCapability.fetchOpenOrders
+    )
+
+    const data = await this.ccxtExchange[method](symbol, since, limit)
+
+    return data.map((item) => new Order({ data: item }))
   }
 }
 

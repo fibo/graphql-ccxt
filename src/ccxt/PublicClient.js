@@ -49,8 +49,16 @@ class CcxtPublicClient {
 
   // Follows private APIs, not allowed on public client.
 
+  closedOrders () {
+    this._throwPrivateApiNotAvailable(ccxtExchangeCapability.fetchClosedOrders)
+  }
+
   createOrder () {
     this._throwPrivateApiNotAvailable(ccxtExchangeCapability.createOrder)
+  }
+
+  openOrders () {
+    this._throwPrivateApiNotAvailable(ccxtExchangeCapability.fetchOpenOrders)
   }
 }
 
