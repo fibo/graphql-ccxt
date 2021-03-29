@@ -14,10 +14,12 @@ class CcxtPrivateClient extends CcxtPublicClient {
     return new Balance({ data, filters: { currencies } })
   }
 
-  async closedOrders ({ symbol, since, limit }) {
+  async closedOrders ({ filter: { symbol, daysAgo, limit } }) {
     const method = this._hasCapabilityOrThrow(
       ccxtExchangeCapability.fetchClosedOrders
     )
+
+    const since = CcxtPublicClient.timestmapDaysAgo(daysAgo)
 
     const data = await this.ccxtExchange[method](symbol, since, limit)
 
@@ -48,10 +50,12 @@ class CcxtPrivateClient extends CcxtPublicClient {
     return new Order({ data })
   }
 
-  async openOrders ({ symbol, since, limit }) {
+  async openOrders ({ filter: { symbol, daysAgo, limit } }) {
     const method = this._hasCapabilityOrThrow(
       ccxtExchangeCapability.fetchOpenOrders
     )
+
+    const since = CcxtPublicClient.timestmapDaysAgo(daysAgo)
 
     const data = await this.ccxtExchange[method](symbol, since, limit)
 

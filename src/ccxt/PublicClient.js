@@ -11,6 +11,12 @@ class CcxtPublicClient {
     this.exchange = ccxtExchange.id
   }
 
+  static timestmapDaysAgo (num) {
+    if (typeof num === 'number') {
+      return Math.floor(new Date().getTime() - 86400000 * num)
+    }
+  }
+
   _hasCapabilityOrThrow (capability) {
     if (this.ccxtExchange.has[capability]) {
       return capability

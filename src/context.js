@@ -49,6 +49,9 @@ class GraphqlCcxtContext {
       secret,
       uid,
       timeout,
+      options: {
+        adjustForTimeDifference: true
+      },
       ...otherCcxtExchangeParams
     })
 

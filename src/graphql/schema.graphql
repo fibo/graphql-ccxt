@@ -28,11 +28,15 @@ input ClientKeyInput {
   label: String
 }
 
+input OrdersFilterInput {
+  symbol: String
+  daysAgo: Int
+  limit: Int
+}
+
 input OrdersMultiInput {
   client: ClientKeyInput!
-  symbol: String
-  since: Int
-  limit: Int
+  filter: OrdersFilterInput!
 }
 
 input OrderInput {
@@ -85,8 +89,8 @@ type Client {
   # Private API
 
   balance(currencies: [String]): Balance
-  closedOrders(symbol: String, since: Int, limit: Int): [Order]
-  openOrders(symbol: String, since: Int, limit: Int): [Order]
+  closedOrders(filter: OrdersFilterInput!): [Order]
+  openOrders(filter: OrdersFilterInput!): [Order]
 }
 
 type ClientKey {
@@ -151,15 +155,8 @@ type Order {
 }
 
 type OrderMulti {
-  client: Client
+  client: ClientKey!
   order: Order
-}
-
-type OrdersMulti {
-  client: ClientKeyInput!
-  symbol: String
-  since: Int
-  limit: Int
 }
 
 type Ticker {

@@ -8,21 +8,8 @@ module.exports = {
   graphqlCcxtSchemaSource: `
 # graphql-ccxt
 
-type Amount {
-  currency: String!
-  value: Float!
-}
-
-type Balance {
-  free: [Amount]
-  total: [Amount]
-  used: [Amount]
-}
-
-type Ticker {
-  symbol: String!
-  last: Float
-}
+# Enumations
+#######################################################################
 
 enum OrderType {
   LIMIT
@@ -41,24 +28,23 @@ enum OrderStatus {
   OPEN
 }
 
+# Input types
+#######################################################################
+
 input ClientKeyInput {
   exchange: String!
   label: String
 }
 
-type ClientKey {
-  exchange: String!
-  label: String
+input OrdersFilterInput {
+  symbol: String
+  daysAgo: Int
+  limit: Int
 }
 
-input TickerMultiInput {
+input OrdersMultiInput {
   client: ClientKeyInput!
-  symbol: String!
-}
-
-type TickerMulti {
-  client: ClientKey!
-  ticker: Ticker
+  filter: OrdersFilterInput!
 }
 
 input OrderInput {
@@ -74,9 +60,50 @@ input OrderMultiInput {
   order: OrderInput!
 }
 
-type OrderMulti {
-  client: Client
-  order: Order
+input TickerMultiInput {
+  client: ClientKeyInput!
+  symbol: String!
+}
+
+# Type definitions
+#######################################################################
+
+type Amount {
+  currency: String!
+  value: Float!
+}
+
+type Balance {
+  free: [Amount]
+  total: [Amount]
+  used: [Amount]
+}
+
+type Client {
+  """
+  A client is identified at first by the exchange id, e.g. "binance".
+  """
+  exchange: String!
+  """
+  A label is optionally used to distinguish two clients on the same exchange.
+  """
+  label: String
+
+  # Public API
+
+  ticker(symbol: String!): Ticker
+  tickers(symbols: [String]): [Ticker]
+
+  # Private API
+
+  balance(currencies: [String]): Balance
+  closedOrders(filter: OrdersFilterInput!): [Order]
+  openOrders(filter: OrdersFilterInput!): [Order]
+}
+
+type ClientKey {
+  exchange: String!
+  label: String
 }
 
 type Order {
@@ -135,31 +162,31 @@ type Order {
   timestamp: Int
 }
 
-type Client {
-  """
-  A client is identified at first by the exchange id, e.g. "binance".
-  """
-  exchange: String!
-  """
-  A label is optionally used to distinguish two clients on the same exchange.
-  """
-  label: String
-
-  # Public API
-
-  ticker(symbol: String!): Ticker
-  tickers(symbols: [String]): [Ticker]
-
-  # Private API
-
-  balance(currencies: [String]): Balance
+type OrderMulti {
+  client: ClientKey!
+  order: Order
 }
+
+type Ticker {
+  symbol: String!
+  last: Float
+}
+
+type TickerMulti {
+  client: ClientKey!
+  ticker: Ticker
+}
+
+# Special types, Query and Mutation
+#######################################################################
 
 type Query {
   client(exchange: String!, label: String): Client
 
   clients: [Client]!
 
+  closedOrdersMulti(list: [OrdersMultiInput]): [OrderMulti]
+  openOrdersMulti(list: [OrdersMultiInput]): [OrderMulti]
   tickerMulti(list: [TickerMultiInput]): [TickerMulti]
 }
 

@@ -1,0 +1,8 @@
+{
+  client(exchange: "binance") {
+    closedOrders(filter: { symbol: "BTC/BUSD" }) {
+      datetime
+      amount
+    }
+  }
+}
