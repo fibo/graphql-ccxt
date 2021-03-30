@@ -2,6 +2,8 @@
 
 > wake up bears 🐻 ride bulls 🐂
 
+[graphql-ccxt GraphQL schema source here](https://github.com/fibo/graphql-ccxt/blob/main/src/graphql/schema.graphql)
+
 ## Features
 
 - Joins together [GraphQL] and [CCXT]: can fetch prices, read balance, open orders, etc. on multiple exchanges at once.

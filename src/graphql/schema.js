@@ -8,7 +8,7 @@ module.exports = {
   graphqlCcxtSchemaSource: `
 # graphql-ccxt
 
-# Enumations
+# Enumerations
 #######################################################################
 
 enum OrderType {
@@ -65,6 +65,11 @@ input TickerMultiInput {
   symbol: String!
 }
 
+input TickersMultiInput {
+  client: ClientKeyInput!
+  symbols: [String!]
+}
+
 # Type definitions
 #######################################################################
 
@@ -90,11 +95,13 @@ type Client {
   label: String
 
   # Public API
+  #####################################################################
 
   ticker(symbol: String!): Ticker
   tickers(symbols: [String]): [Ticker]
 
   # Private API
+  #####################################################################
 
   balance(currencies: [String]): Balance
   closedOrders(filter: OrdersFilterInput!): [Order]
@@ -177,17 +184,29 @@ type TickerMulti {
   ticker: Ticker
 }
 
+type TickersMulti {
+  client: ClientKey!
+  tickers: [Ticker]
+}
+
 # Special types, Query and Mutation
 #######################################################################
 
 type Query {
   client(exchange: String!, label: String): Client
-
   clients: [Client]!
+
+  # Public API
+  #####################################################################
+
+  tickerMulti(list: [TickerMultiInput]): [TickerMulti]
+  tickersMulti(list: [TickersMultiInput]): [TickersMulti]
+
+  # Private API
+  #####################################################################
 
   closedOrdersMulti(list: [OrdersMultiInput]): [OrderMulti]
   openOrdersMulti(list: [OrdersMultiInput]): [OrderMulti]
-  tickerMulti(list: [TickerMultiInput]): [TickerMulti]
 }
 
 type Mutation {

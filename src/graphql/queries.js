@@ -60,12 +60,30 @@ async function tickerMulti ({ list }, context) {
   return output
 }
 
+async function tickersMulti ({ list }, context) {
+  const output = []
+
+  for await (const input of list) {
+    try {
+      const client = await getClient(input.client, context)
+      const tickers = await client.tickers({ symbols: input.symbols })
+      output.push({ client, tickers })
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  return output
+}
+
 module.exports = {
   graphqlCcxtQueries: {
     client: getClient,
     clients: getClients,
     closedOrders,
     openOrders,
-    tickerMulti
+    tickerMulti,
+    tickersMulti
   }
 }
