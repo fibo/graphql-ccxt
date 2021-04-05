@@ -1,6 +1,6 @@
 const { GraphqlCcxtContext } = require('../context.js')
 
-async function closedOrders ({ list }, context) {
+async function closedOrdersMulti ({ list }, context) {
   const output = []
 
   for await (const input of list) {
@@ -26,7 +26,24 @@ function getClients (_, context) {
   return context.getClientsInstances()
 }
 
-async function openOrders ({ list }, context) {
+async function marketsMulti ({ list }, context) {
+  const output = []
+
+  for await (const input of list) {
+    try {
+      const client = await getClient(input.client, context)
+      const markets = await client.markets({ filter: input.filter })
+      output.push({ client, markets })
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  return output
+}
+
+async function openOrdersMulti ({ list }, context) {
   const output = []
 
   for await (const input of list) {
@@ -81,8 +98,9 @@ module.exports = {
   graphqlCcxtQueries: {
     client: getClient,
     clients: getClients,
-    closedOrders,
-    openOrders,
+    closedOrdersMulti,
+    openOrdersMulti,
+    marketsMulti,
     tickerMulti,
     tickersMulti
   }

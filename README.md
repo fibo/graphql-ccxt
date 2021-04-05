@@ -2,13 +2,14 @@
 
 > wake up bears 🐻 ride bulls 🐂
 
-[graphql-ccxt GraphQL schema source here](https://github.com/fibo/graphql-ccxt/blob/main/src/graphql/schema.graphql)
+You can read the [graphql-ccxt GraphQL schema source here](https://github.com/fibo/graphql-ccxt/blob/main/src/graphql/schema.graphql).
 
 ## Features
 
 - Joins together [GraphQL] and [CCXT]: can fetch prices, read balance, open orders, etc. on multiple exchanges at once.
 - No dependencies other than [graphql](https://www.npmjs.com/package/graphql) and [ccxt](https://www.npmjs.com/package/ccxt) (by the way, installed as peer deps).
-- It's isomorphic! It works on a server as usual (see demo below), but also in a browser (see [examples/browser/](https://github.com/fibo/graphql-ccxt/tree/main/examples/browser) folder).
+- It's isomorphic! It works on a server as usual (see [demo below](#demo)), but also in a browser (see [examples/browser/ folder](https://github.com/fibo/graphql-ccxt/tree/main/examples/browser)).
+- Last but not least, it can be used to increase your income 💰💰💰
 
 ## Credits
 

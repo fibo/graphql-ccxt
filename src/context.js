@@ -55,14 +55,16 @@ class GraphqlCcxtContext {
       ...otherCcxtExchangeParams
     })
 
-    await ccxtExchange.loadMarkets()
-
     if (isPublic) {
       const client = new CcxtPublicClient({ ccxtExchange, label })
+
+      await client.loadMarkets()
 
       publicClientsMap.set(clientKey, client)
     } else {
       const client = new CcxtPrivateClient({ ccxtExchange, label })
+
+      await client.loadMarkets()
 
       privateClientsMap.set(clientKey, client)
     }

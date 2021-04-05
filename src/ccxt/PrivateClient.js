@@ -1,7 +1,7 @@
 const { Balance } = require('../models/Balance.js')
 const { Order } = require('../models/Order.js')
-const { CcxtPublicClient } = require('./PublicClient.js')
 const { ccxtExchangeCapability } = require('./exchangeCapabilities')
+const { CcxtPublicClient } = require('./PublicClient.js')
 
 class CcxtPrivateClient extends CcxtPublicClient {
   async balance ({ currencies }) {
@@ -19,7 +19,7 @@ class CcxtPrivateClient extends CcxtPublicClient {
       ccxtExchangeCapability.fetchClosedOrders
     )
 
-    const since = CcxtPublicClient.timestmapDaysAgo(daysAgo)
+    const since = CcxtPublicClient.millisecondsDaysAgo(daysAgo)
 
     const data = await this.ccxtExchange[method](symbol, since, limit)
 
@@ -55,7 +55,7 @@ class CcxtPrivateClient extends CcxtPublicClient {
       ccxtExchangeCapability.fetchOpenOrders
     )
 
-    const since = CcxtPublicClient.timestmapDaysAgo(daysAgo)
+    const since = CcxtPublicClient.millisecondsDaysAgo(daysAgo)
 
     const data = await this.ccxtExchange[method](symbol, since, limit)
 

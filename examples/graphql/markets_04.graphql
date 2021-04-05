@@ -1,0 +1,13 @@
+{
+  client(exchange: "binance") {
+    markets(filter: { base: "BNB" }) {
+      symbol
+      limits {
+        amount {
+          min
+          max
+        }
+      }
+    }
+  }
+}

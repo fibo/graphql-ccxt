@@ -1,0 +1,14 @@
+{
+  client(exchange: "binance") {
+    markets(filter: { active: false }) {
+      symbol
+      active
+      limits {
+        amount {
+          min
+          max
+        }
+      }
+    }
+  }
+}

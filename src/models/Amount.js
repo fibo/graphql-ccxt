@@ -1,7 +1,9 @@
 class Amount {
   constructor ({ data: { currency, value } }) {
-    this.currency = currency
-    this.value = value
+    Object.defineProperties(this, {
+      currency: { value: currency },
+      value: { value: value }
+    })
   }
 }
 

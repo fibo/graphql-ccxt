@@ -28,15 +28,16 @@ input ClientKeyInput {
   label: String
 }
 
+input MarketsFilterInput {
+  active: Boolean
+  base: String
+  quote: String
+}
+
 input OrdersFilterInput {
   symbol: String
   daysAgo: Int
   limit: Int
-}
-
-input OrdersMultiInput {
-  client: ClientKeyInput!
-  filter: OrdersFilterInput!
 }
 
 input OrderInput {
@@ -47,9 +48,22 @@ input OrderInput {
   price: Float
 }
 
+# Input types for multiple exchanges
+#######################################################################
+
 input OrderMultiInput {
   client: ClientKeyInput!
   order: OrderInput!
+}
+
+input OrdersMultiInput {
+  client: ClientKeyInput!
+  filter: OrdersFilterInput!
+}
+
+input MarketsMultiInput {
+  client: ClientKeyInput!
+  filter: MarketsFilterInput
 }
 
 input TickerMultiInput {
@@ -89,6 +103,7 @@ type Client {
   # Public API
   #####################################################################
 
+  markets(filter: MarketsFilterInput): [Market]
   ticker(symbol: String!): Ticker
   tickers(symbols: [String]): [Ticker]
 
@@ -103,6 +118,11 @@ type Client {
 type ClientKey {
   exchange: String!
   label: String
+}
+
+type NumericInterval {
+  min: Float
+  max: Float
 }
 
 type Order {
@@ -161,14 +181,45 @@ type Order {
   timestamp: Int
 }
 
-type OrderMulti {
-  client: ClientKey!
-  order: Order
+type Market {
+  symbol: String!
+  base: String!
+  quote: String!
+  active: Boolean
+  limits: MarketLimits
+  precision: MarketPrecision
+}
+
+type MarketLimits {
+  amount: NumericInterval
+  price: NumericInterval
+  cost: NumericInterval
+  market: NumericInterval
+}
+
+type MarketPrecision {
+  base: Int
+  quote: Int
+  amount: Int
+  price: Int
 }
 
 type Ticker {
   symbol: String!
   last: Float
+}
+
+# Type definitions for multiple exchanges
+#######################################################################
+
+type MarketMulti {
+  client: ClientKey!
+  market: Market
+}
+
+type OrderMulti {
+  client: ClientKey!
+  order: Order
 }
 
 type TickerMulti {
@@ -181,7 +232,7 @@ type TickersMulti {
   tickers: [Ticker]
 }
 
-# Special types, Query and Mutation
+# Special types: Query and Mutation
 #######################################################################
 
 type Query {
@@ -191,6 +242,7 @@ type Query {
   # Public API
   #####################################################################
 
+  marketsMulti(list: [MarketsMultiInput]): [MarketMulti]
   tickerMulti(list: [TickerMultiInput]): [TickerMulti]
   tickersMulti(list: [TickersMultiInput]): [TickersMulti]
 

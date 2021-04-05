@@ -1,7 +1,9 @@
 class Ticker {
   constructor ({ data: { symbol, last } }) {
-    this.symbol = symbol
-    this.last = last
+    Object.defineProperties(this, {
+      symbol: { value: symbol },
+      last: { value: last }
+    })
   }
 }
 

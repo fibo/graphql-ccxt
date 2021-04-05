@@ -1,0 +1,13 @@
+{
+  client(exchange: "binance") {
+    markets {
+      symbol
+      limits {
+        amount {
+          min
+          max
+        }
+      }
+    }
+  }
+}
