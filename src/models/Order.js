@@ -15,20 +15,17 @@ class Order {
       type
     }
   }) {
-    Object.defineProperties(this, {
-      amount: { value: amount },
-      cost: { value: cost },
-      datetime: { value: datetime },
-      filled: { value: filled },
-      lastTradeTimestamp: { value: lastTradeTimestamp },
-      price: { value: price },
-      remaining: { value: remaining },
-      side: { value: side.toUpperCase() },
-      status: { value: status.toUpperCase() },
-      symbol: { value: symbol },
-      timestamp: { value: timestamp },
-      type: { value: type.toUpperCase() }
-    })
+    this.amount = amount
+    this.cost = cost
+    this.datetime = datetime
+    this.filled = filled
+    this.lastTradeTimestamp = lastTradeTimestamp
+    this.remaining = remaining
+    this.side = side.toUpperCase()
+    this.status = status.toUpperCase()
+    this.symbol = symbol
+    this.timestamp = timestamp
+    this.type = type.toUpperCase()
   }
 }
 

@@ -207,6 +207,15 @@ type MarketPrecision {
 type Ticker {
   symbol: String!
   last: Float
+  open: Float
+  high: Float
+  close: Float
+  low: Float
+  bid: Float
+  ask: Float
+  vwap: Float
+  percentage: Float
+  change: Float
 }
 
 # Type definitions for multiple exchanges

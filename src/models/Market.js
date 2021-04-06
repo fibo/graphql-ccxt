@@ -1,68 +1,52 @@
 const { NumericInterval } = require('./NumericInterval.js')
 
+const { isNumericInterval } = NumericInterval
+
 class MarketLimits {
   constructor ({ data: { amount, price, cost, market } }) {
-    const hasAmount = typeof amount === 'object'
-    if (hasAmount) {
-      Object.defineProperty(this, 'amount', {
-        value: new NumericInterval({ data: amount })
-      })
+    if (isNumericInterval(amount)) {
+      this.amount = new NumericInterval({ data: amount })
     }
 
-    const hasPrice = typeof price === 'object'
-    if (hasPrice) {
-      Object.defineProperty(this, 'price', {
-        value: new NumericInterval({ data: amount })
-      })
+    if (isNumericInterval(price)) {
+      this.price = new NumericInterval({ data: amount })
     }
 
-    const hasCost = typeof cost === 'object'
-    if (hasCost) {
-      Object.defineProperty(this, 'cost', {
-        value: new NumericInterval({ data: amount })
-      })
+    if (isNumericInterval(cost)) {
+      this.cost = new NumericInterval({ data: amount })
     }
 
-    const hasMarket = typeof market === 'object'
-    if (hasMarket) {
-      Object.defineProperty(this, 'market', {
-        value: new NumericInterval({ data: amount })
-      })
+    if (isNumericInterval(market)) {
+      this.market = new NumericInterval({ data: amount })
     }
   }
 }
 
 class MarketPrecision {
   constructor ({ data: { base, quote, amount, price } }) {
-    Object.defineProperties(this, {
-      base: { value: base },
-      quote: { value: quote },
-      amount: { value: amount },
-      price: { value: price }
-    })
+    this.base = base
+    this.quote = quote
+    this.amount = amount
+    this.price = price
   }
 }
 
 class Market {
   constructor ({ data: { active, symbol, base, quote, precision, limits } }) {
-    Object.defineProperties(this, {
-      symbol: { value: symbol },
-      base: { value: base },
-      quote: { value: quote }
-    })
-
-    Object.defineProperty(this, 'active', { value: active })
+    this.symbol = symbol
+    this.base = base
+    this.quote = quote
+    this.active = active
 
     const hasLimits = typeof limits === 'object'
     if (hasLimits) {
-      Object.defineProperty(this, 'limits', {
-        value: new MarketLimits({ data: limits })
-      })
+      this.limits = new MarketLimits({ data: limits })
     }
 
-    Object.defineProperty(this, 'precision', {
-      value: new MarketPrecision({ data: precision })
-    })
+    const hasPrecision = typeof precision === 'object'
+    if (hasPrecision) {
+      this.precistion = new MarketPrecision({ data: precision })
+    }
   }
 }
 

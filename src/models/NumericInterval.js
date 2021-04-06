@@ -8,12 +8,20 @@ class NumericInterval {
     }
 
     if (hasMin) {
-      Object.defineProperty(this, 'min', { value: min })
+      this.min = min
     }
 
     if (hasMax) {
-      Object.defineProperty(this, 'max', { value: max })
+      this.max = max
     }
+  }
+
+  static isNumericInterval (data) {
+    return (
+      data !== null &&
+      typeof data === 'object' &&
+      (typeof min === 'number' || typeof max === 'number')
+    )
   }
 }
 

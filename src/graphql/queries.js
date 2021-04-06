@@ -66,7 +66,7 @@ async function tickerMulti ({ list }, context) {
   for await (const input of list) {
     try {
       const client = await getClient(input.client, context)
-      const ticker = await client.ticker(input.symbol)
+      const ticker = await client.ticker({ symbol: input.symbol })
       output.push({ client, ticker })
     } catch (error) {
       console.error(error)

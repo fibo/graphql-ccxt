@@ -19,7 +19,7 @@ class CcxtPrivateClient extends CcxtPublicClient {
       ccxtExchangeCapability.fetchClosedOrders
     )
 
-    const since = CcxtPublicClient.millisecondsDaysAgo(daysAgo)
+    const since = this.millisecondsDaysAgo(daysAgo)
 
     const data = await this.ccxtExchange[method](symbol, since, limit)
 
@@ -55,7 +55,7 @@ class CcxtPrivateClient extends CcxtPublicClient {
       ccxtExchangeCapability.fetchOpenOrders
     )
 
-    const since = CcxtPublicClient.millisecondsDaysAgo(daysAgo)
+    const since = this.millisecondsDaysAgo(daysAgo)
 
     const data = await this.ccxtExchange[method](symbol, since, limit)
 

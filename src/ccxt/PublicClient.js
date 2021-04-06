@@ -72,7 +72,7 @@ class CcxtPublicClient {
           return true
         }
       })
-      .filer((data) => {
+      .filter((data) => {
         if (hasFilters && typeof filter.quote === 'string') {
           return data.quote === filter.quote
         } else {
