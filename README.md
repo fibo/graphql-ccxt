@@ -36,7 +36,7 @@ npm install graphql ccxt graphql-ccxt
 
 Then point your browser to http://localhost:4000/graphql
 
-![query](media/query.png)
+![query](https://github.com/fibo/graphql-ccxt/raw/main/media/query.png)
 
 Take a look to [examples/graphql/](https://github.com/fibo/graphql-ccxt/tree/main/examples/graphql) folder.
 It contains both queries and mutations, among others:
