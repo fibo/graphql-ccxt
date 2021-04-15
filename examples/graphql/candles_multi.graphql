@@ -1,0 +1,58 @@
+{
+  candlesMulti(
+    list: [
+      {
+        client: { exchange: "binance" }
+        filters: [
+          {
+            symbol: "ETH/USDT"
+            timeframe: "1m"
+            timestamp: "1609632000000"
+            limit: 1
+          }
+          {
+            symbol: "ETH/USDT"
+            timeframe: "5m"
+            timestamp: "1609632000000"
+            limit: 1
+          }
+        ]
+      }
+      {
+        client: { exchange: "bitfinex" }
+        filters: [
+          {
+            symbol: "ETH/USDT"
+            timeframe: "1m"
+            timestamp: "1609632000000"
+            limit: 1
+          }
+          {
+            symbol: "ETH/USDT"
+            timeframe: "5m"
+            timestamp: "1609632000000"
+            limit: 1
+          }
+        ]
+      }
+    ]
+  ) {
+    client {
+      exchange
+    }
+    results {
+      ... on CandlesSuccess {
+        symbol
+        timeframe
+        series {
+          ts
+          ohlcv
+        }
+      }
+      ... on CandlesError {
+        __typename
+        message
+      }
+    }
+  }
+}

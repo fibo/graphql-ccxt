@@ -47,6 +47,10 @@ It contains both queries and mutations, among others:
 - [fetch your balance, only Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/balance_02.graphql)
 - [create an order](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrder_01.graphql)
 - [create orders on multiple exchanges](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrderMulti_01.graphql)
+- [fetch available timeframes](examples/graphql/timeframes_01.graphql)
+- [fetch available timeframes for multiple exchanges](examples/graphql/@TODO)
+- [fetch ohlcv (candlesticks) data](examples/graphql/candles_01.graphql)
+- [fetch ohlcv (candlesticks) data for multiple exchanges](examples/graphql/candles_multi.graphql)
 
 ### Access private API
 
@@ -83,6 +87,14 @@ async function startDemo() {
     exchange: 'binance',
     apiKey: process.env.BINANCE_APIKEY,
     secret: process.env.BINANCE_APISECRET
+  })
+
+  await context.addClient({
+    exchange: 'bitfinex'
+  })
+
+  await context.addClient({
+    exchange: 'bittrex'
   })
 
   // 2. Build GraphQL schema.

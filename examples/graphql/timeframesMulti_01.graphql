@@ -1,0 +1,14 @@
+{
+  timeframesMulti(
+    list: [
+      { client: { exchange: "binance" } }
+      { client: { exchange: "bittrex" } }
+      { client: { exchange: "bitfinex" } }
+    ]
+  ) {
+    client {
+      exchange
+    }
+    timeframes
+  }
+}
