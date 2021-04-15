@@ -2,6 +2,7 @@ const { GraphQLError } = require('graphql')
 
 const { Market } = require('../models/Market.js')
 const { Ticker } = require('../models/Ticker.js')
+const { Candle, CandlesSuccess, CandlesError } = require('../models/Candle.js')
 const { ccxtExchangeCapability } = require('./exchangeCapabilities')
 
 class CcxtPublicClient {
@@ -30,6 +31,26 @@ class CcxtPublicClient {
 
     throw new GraphQLError(
       `Exchange ${this.exchange} has no '${capability}' capability`
+    )
+  }
+
+  _getTimeframeOrThrow (timeframe) {
+    if (!this.lastLoadMarkets) {
+      throw new Error(
+        'Cannot use graphql-ccxt client, async method loadMarkets() was not called'
+      )
+    }
+    const frames = this.ccxtExchange.timeframes
+
+    const timeframeFull = frames[timeframe]
+    if (timeframeFull) {
+      return timeframeFull
+    }
+
+    throw new GraphQLError(
+      `Exchange ${this.exchange} has no '${timeframe}' timeframe. Available: ${[
+        ...Object.keys(frames)
+      ]}`
     )
   }
 
@@ -100,6 +121,34 @@ class CcxtPublicClient {
     const data = await this.ccxtExchange[method](symbols)
 
     return Object.values(data).map((data) => new Ticker({ data }))
+  }
+
+  timeframes () {
+    // timeframes are available for clients with fetchOHLCV capability
+    this._hasCapabilityOrThrow(ccxtExchangeCapability.fetchOHLCV)
+
+    return Object.keys(this.ccxtExchange.timeframes)
+  }
+
+  async candles ({ filter: { symbol, timeframe, timestamp, limit } }) {
+    try {
+      const method = this._hasCapabilityOrThrow(
+        ccxtExchangeCapability.fetchOHLCV
+      )
+      const _timestamp = Number.parseInt(timestamp)
+      const _timeframe = this._getTimeframeOrThrow(timeframe)
+
+      const result = await this.ccxtExchange[method](
+        symbol,
+        _timeframe,
+        _timestamp,
+        limit
+      )
+      const series = Object.values(result).map((data) => new Candle({ data }))
+      return new CandlesSuccess(series, symbol, timeframe, timestamp, limit)
+    } catch (e) {
+      return new CandlesError(e)
+    }
   }
 
   // Follows private APIs, not allowed on public client.
