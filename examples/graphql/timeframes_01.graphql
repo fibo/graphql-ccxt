@@ -1,0 +1,12 @@
+{
+  client(exchange: "binance") {
+    exchange
+    timeframes
+  }
+  bitfinex: client(exchange: "bitfinex") {
+    timeframes
+  }
+  bittrex: client(exchange: "bittrex") {
+    timeframes
+  }
+}

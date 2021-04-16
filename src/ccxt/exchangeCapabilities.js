@@ -4,7 +4,8 @@ const ccxtExchangeCapability = {
   fetchClosedOrders: 'fetchClosedOrders',
   fetchOpenOrders: 'fetchOpenOrders',
   fetchTicker: 'fetchTicker',
-  fetchTickers: 'fetchTickers'
+  fetchTickers: 'fetchTickers',
+  fetchOHLCV: 'fetchOHLCV'
 }
 
 module.exports = {

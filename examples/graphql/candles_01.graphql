@@ -1,0 +1,26 @@
+{
+  client(exchange: "binance") {
+    exchange
+    timeframes
+    candles(
+      filter: {
+        symbol: "BTC/USDT"
+        timeframe: "1h"
+        timestamp: "1609632000000"
+        limit: 24
+      }
+    ) {
+      ... on CandlesSuccess {
+        timeframe
+        series {
+          ohlcv
+          ts
+        }
+      }
+      ... on CandlesError {
+        message
+        __typename
+      }
+    }
+  }
+}

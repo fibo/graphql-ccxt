@@ -23,6 +23,14 @@ async function startDemo () {
     secret: process.env.BINANCE_APISECRET
   })
 
+  await context.addClient({
+    exchange: 'bitfinex'
+  })
+
+  await context.addClient({
+    exchange: 'bittrex'
+  })
+
   // 2. Build GraphQL schema.
   /// /
   const schema = buildSchema(graphqlCcxtSchemaSource)

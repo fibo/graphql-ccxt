@@ -1,4 +1,5 @@
 const { GraphqlCcxtContext } = require('../context.js')
+const { CandlesError } = require('../models/Candle.js')
 
 async function closedOrdersMulti ({ list }, context) {
   const output = []
@@ -94,6 +95,52 @@ async function tickersMulti ({ list }, context) {
   return output
 }
 
+async function timeframesMulti ({ list }, context) {
+  const output = []
+
+  for await (const input of list) {
+    try {
+      const client = await getClient(input.client, context)
+      const timeframes = client.timeframes()
+      output.push({ client, timeframes })
+    } catch (error) {
+      console.error(error)
+      throw error
+    }
+  }
+
+  return output
+}
+
+async function candlesMulti ({ list }, context) {
+  const output = []
+
+  const fetchCandles = async function (client, filter) {
+    let results
+    try {
+      results = await client.candles({ filter })
+    } catch (e) {
+      results = new CandlesError(e)
+      output.push({ client, results })
+    }
+
+    output.push({ client, results })
+  }
+
+  for (const input of list) {
+    const client = await getClient(input.client, context)
+    const fetchCalls = input.filters.map((filter) =>
+      fetchCandles(client, filter)
+    )
+    await Promise.all(fetchCalls).catch((e) => {
+      console.error(e)
+      return Promise.resolve()
+    })
+  }
+
+  return output
+}
+
 module.exports = {
   graphqlCcxtQueries: {
     client: getClient,
@@ -102,6 +149,8 @@ module.exports = {
     openOrdersMulti,
     marketsMulti,
     tickerMulti,
-    tickersMulti
+    tickersMulti,
+    candlesMulti,
+    timeframesMulti
   }
 }
