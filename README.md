@@ -39,7 +39,7 @@ Then point your browser to http://localhost:4000/graphql
 ![query](https://github.com/fibo/graphql-ccxt/raw/main/media/query.png)
 
 Take a look to [examples/graphql/](https://github.com/fibo/graphql-ccxt/tree/main/examples/graphql) folder.
-It contains both queries and mutations, among others:
+It contains both _queries_ and _mutations_, among others:
 
 - [fetch Bitcoin price](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/ticker_01.graphql)
 - [fetch multiple prices, Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/tickers_01.graphql)
@@ -48,9 +48,9 @@ It contains both queries and mutations, among others:
 - [create an order](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrder_01.graphql)
 - [create orders on multiple exchanges](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrderMulti_01.graphql)
 - [fetch available timeframes](examples/graphql/timeframes_01.graphql)
-- [fetch available timeframes for multiple exchanges](examples/graphql/@TODO)
-- [fetch ohlcv (candlesticks) data](examples/graphql/candles_01.graphql)
-- [fetch ohlcv (candlesticks) data for multiple exchanges](examples/graphql/candles_multi.graphql)
+- [fetch available timeframes for multiple exchanges](examples/graphql/timeframesMulti_01.graphql)
+- [fetch ohlcv candlesticks](examples/graphql/candles_01.graphql)
+- [fetch ohlcv candlesticks for multiple exchanges](examples/graphql/candlesMulti_01.graphql)
 
 ### Access private API
 
@@ -75,34 +75,29 @@ const {
 
 async function startDemo() {
   // 1. Create GraphQL context. It holds your exchange clients.
-  ////
+  // //////////////////////////////////////////////////////////////////////////
   const context = new GraphqlCcxtContext()
-  // Add a public client on Coinbase exchange.
-  await context.addClient({
-    exchange: 'coinbase'
-  })
-  // Add another client on Binance exchange.
-  // It will be private if environment variables are defined, otherwise it will be public.
+
+  // Add a client on Binance exchange.
+  // It will be private if environment variables are defined,
+  // otherwise it will be public.
   await context.addClient({
     exchange: 'binance',
     apiKey: process.env.BINANCE_APIKEY,
     secret: process.env.BINANCE_APISECRET
   })
 
-  await context.addClient({
-    exchange: 'bitfinex'
-  })
-
-  await context.addClient({
-    exchange: 'bittrex'
-  })
+  // Add few public clients on other exchanges.
+  await context.addClient({ exchange: 'coinbase' })
+  await context.addClient({ exchange: 'bitfinex' })
+  await context.addClient({ exchange: 'bittrex' })
 
   // 2. Build GraphQL schema.
-  ////
+  // //////////////////////////////////////////////////////////////////////////
   const schema = buildSchema(graphqlCcxtSchemaSource)
 
   // 3. Launch express-graphql server.
-  ////
+  // //////////////////////////////////////////////////////////////////////////
   express()
     .use(
       '/graphql',

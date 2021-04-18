@@ -119,8 +119,8 @@ async function candlesMulti ({ list }, context) {
     let results
     try {
       results = await client.candles({ filter })
-    } catch (e) {
-      results = new CandlesError(e)
+    } catch (error) {
+      results = new CandlesError(error)
       output.push({ client, results })
     }
 
@@ -132,8 +132,8 @@ async function candlesMulti ({ list }, context) {
     const fetchCalls = input.filters.map((filter) =>
       fetchCandles(client, filter)
     )
-    await Promise.all(fetchCalls).catch((e) => {
-      console.error(e)
+    await Promise.all(fetchCalls).catch((error) => {
+      console.error(error)
       return Promise.resolve()
     })
   }
@@ -145,12 +145,12 @@ module.exports = {
   graphqlCcxtQueries: {
     client: getClient,
     clients: getClients,
+    candlesMulti,
     closedOrdersMulti,
-    openOrdersMulti,
     marketsMulti,
+    openOrdersMulti,
     tickerMulti,
     tickersMulti,
-    candlesMulti,
     timeframesMulti
   }
 }

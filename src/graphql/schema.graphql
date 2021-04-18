@@ -267,7 +267,7 @@ type CandlesError {
 }
 
 type Candle {
-  ts: String!
+  timestamp: String!
   ohlcv: [Float!]
 }
 

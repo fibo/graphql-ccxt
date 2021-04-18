@@ -1,12 +1,12 @@
 class Candle {
-  constructor ({ data }) {
-    this.ts = data[0]
-    this.ohlcv = [data[1], data[2], data[3], data[4], data[5]]
+  constructor ({ data: [timestamp, open, high, low, close, volume] }) {
+    this.timestamp = timestamp
+    this.ohlcv = [open, high, low, close, volume]
   }
 }
 
 class CandlesSuccess {
-  constructor (series, symbol, timeframe, timestamp, limit) {
+  constructor ({ data: { series, symbol, timeframe, timestamp, limit } }) {
     this.series = series
     this.symbol = symbol
     this.timeframe = timeframe

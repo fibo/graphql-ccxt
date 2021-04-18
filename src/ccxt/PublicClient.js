@@ -19,39 +19,39 @@ class CcxtPublicClient {
   }
 
   _hasCapabilityOrThrow (capability) {
-    if (!this.lastLoadMarkets) {
-      throw new Error(
-        'Cannot use graphql-ccxt client, async method loadMarkets() was not called'
-      )
-    }
+    this._throwIfMarketsNotLoaded()
 
     if (this.ccxtExchange.has[capability]) {
       return capability
     }
 
     throw new GraphQLError(
-      `Exchange ${this.exchange} has no '${capability}' capability`
+      `Exchange '${this.exchange}' has no '${capability}' capability`
     )
   }
 
-  _getTimeframeOrThrow (timeframe) {
-    if (!this.lastLoadMarkets) {
-      throw new Error(
-        'Cannot use graphql-ccxt client, async method loadMarkets() was not called'
+  _hasTimeframeOrThrow (timeframe) {
+    this._throwIfMarketsNotLoaded()
+
+    const timeframes = this.ccxtExchange.timeframes
+
+    if (!timeframes[timeframe]) {
+      throw new GraphQLError(
+        `Exchange '${
+          this.exchange
+        }' has no '${timeframe}' timeframe. Available timeframes are: ${Object.keys(
+          timeframes
+        ).join()}`
       )
     }
-    const frames = this.ccxtExchange.timeframes
+  }
 
-    const timeframeFull = frames[timeframe]
-    if (timeframeFull) {
-      return timeframeFull
+  _throwIfMarketsNotLoaded () {
+    if (!this.lastLoadMarkets) {
+      throw new Error(
+        `Cannot use graphql-ccxt client on exchange '${this.exchange}', async method loadMarkets() was not called`
+      )
     }
-
-    throw new GraphQLError(
-      `Exchange ${this.exchange} has no '${timeframe}' timeframe. Available: ${[
-        ...Object.keys(frames)
-      ]}`
-    )
   }
 
   _throwPrivateApiNotAvailable (capability) {
@@ -135,19 +135,28 @@ class CcxtPublicClient {
       const method = this._hasCapabilityOrThrow(
         ccxtExchangeCapability.fetchOHLCV
       )
-      const _timestamp = Number.parseInt(timestamp)
-      const _timeframe = this._getTimeframeOrThrow(timeframe)
+      this._hasTimeframeOrThrow(timeframe)
+
+      // Need to use a String for timestamp otherwise GraphQL will complain with error
+      //     Int cannot represent non 32-bit signed integer value
+      const timestampInt = parseInt(timestamp)
 
       const result = await this.ccxtExchange[method](
         symbol,
-        _timeframe,
-        _timestamp,
+        timeframe,
+        timestampInt,
         limit
       )
       const series = Object.values(result).map((data) => new Candle({ data }))
-      return new CandlesSuccess(series, symbol, timeframe, timestamp, limit)
-    } catch (e) {
-      return new CandlesError(e)
+      return new CandlesSuccess({
+        data: series,
+        symbol,
+        timeframe,
+        timestamp,
+        limit
+      })
+    } catch (error) {
+      return new CandlesError(error)
     }
   }
 

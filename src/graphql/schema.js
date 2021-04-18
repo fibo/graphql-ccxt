@@ -60,7 +60,6 @@ input OrderInput {
 Input parameters for fetching OHLCV (candlesticks) data.
 """
 input CandlesFilterInput {
-
   """
   Symbol - stock symbol or currency pair. Use "market" query to get the list of supported symbols for any given exchange.
   """
@@ -73,7 +72,7 @@ input CandlesFilterInput {
   """
   Defines the resolution of data (candle). e.g. "1m", "5m", "1h", "1d", etc.
   Note that the set of supported timeframes varies beetween exchanges.
-  You can use "timeframes" query for specific exchange to get the list of supported timeframes. 
+  You can use "timeframes" query for specific exchange to get the list of supported timeframes.
   Defaults to "1h".
   """
   timeframe: String! = "1h"
@@ -150,7 +149,7 @@ type Client {
   markets(filter: MarketsFilterInput): [Market]
   ticker(symbol: String!): Ticker
   tickers(symbols: [String]): [Ticker]
-  candles(filter: CandlesFilterInput!) : CandlesResult
+  candles(filter: CandlesFilterInput!): CandlesResult
   timeframes: [String!]
 
   # Private API
@@ -265,18 +264,18 @@ type Ticker {
 }
 
 type CandlesSuccess {
-  symbol: String,
-  timeframe: String,
-  timestamp: String,
+  symbol: String
+  timeframe: String
+  timestamp: String
   series: [Candle!]
 }
 
 type CandlesError {
-   message: String!
+  message: String!
 }
 
 type Candle {
-  ts: String!,
+  timestamp: String!
   ohlcv: [Float!]
 }
 
@@ -329,8 +328,8 @@ type Query {
   marketsMulti(list: [MarketsMultiInput]): [MarketMulti]
   tickerMulti(list: [TickerMultiInput]): [TickerMulti]
   tickersMulti(list: [TickersMultiInput]): [TickersMulti]
-  timeframesMulti(list:[TimeframesMultiInput]): [TimeframesMulti]
-  candlesMulti(list: [CandlesMultiInput]) : [CandlesMulti]
+  timeframesMulti(list: [TimeframesMultiInput]): [TimeframesMulti]
+  candlesMulti(list: [CandlesMultiInput]): [CandlesMulti]
 
   # Private API
   #####################################################################

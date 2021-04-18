@@ -14,7 +14,7 @@
         timeframe
         series {
           ohlcv
-          ts
+          timestamp
         }
       }
       ... on CandlesError {
