@@ -100,7 +100,9 @@ class CcxtPublicClient {
           return true
         }
       })
-      .map((data) => new Market({ data }))
+      .map((data) => {
+        return new Market({ data })
+      })
   }
 
   async ticker ({ symbol }) {
@@ -149,11 +151,7 @@ class CcxtPublicClient {
       )
       const series = Object.values(result).map((data) => new Candle({ data }))
       return new CandlesSuccess({
-        data: series,
-        symbol,
-        timeframe,
-        timestamp,
-        limit
+        data: { series, symbol, timeframe, timestamp, limit }
       })
     } catch (error) {
       return new CandlesError(error)

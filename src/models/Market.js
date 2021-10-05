@@ -9,15 +9,15 @@ class MarketLimits {
     }
 
     if (isNumericInterval(price)) {
-      this.price = new NumericInterval({ data: amount })
+      this.price = new NumericInterval({ data: price })
     }
 
     if (isNumericInterval(cost)) {
-      this.cost = new NumericInterval({ data: amount })
+      this.cost = new NumericInterval({ data: cost })
     }
 
     if (isNumericInterval(market)) {
-      this.market = new NumericInterval({ data: amount })
+      this.market = new NumericInterval({ data: market })
     }
   }
 }

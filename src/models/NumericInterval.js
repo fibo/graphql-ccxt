@@ -20,7 +20,7 @@ class NumericInterval {
     return (
       data !== null &&
       typeof data === 'object' &&
-      (typeof min === 'number' || typeof max === 'number')
+      (typeof data.min === 'number' || typeof data.max === 'number')
     )
   }
 }
