@@ -1,0 +1,12 @@
+{
+  client(exchange: "binance") {
+    exchange
+    candles(symbol: "ETH/BTC", timeframe: "1d", start: "1609632000000") {
+      series {
+        timestamp
+        open
+        close
+      }
+    }
+  }
+}

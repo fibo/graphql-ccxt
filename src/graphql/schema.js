@@ -56,13 +56,6 @@ input OrderInput {
   price: Float
 }
 
-"""
-Input parameters for fetching OHLCV (candlesticks) data.
-"""
-input CandlesInput {
-  symbol: String!
-}
-
 # Type definitions
 #######################################################################
 
@@ -93,20 +86,17 @@ type Client {
   candles(
     symbol: String!
     """
-    Timestamp in milliseconds defines the starting date for OHLCV data returned starts since this date.
+    Timestamp in milliseconds.
     """
     start: String!
     """
-    Defines the time resolution of data (candle). e.g. "1m", "5m", "1h", "1d", etc.
-    Note that the set of supported timeframes varies beetween exchanges.
-    You can use "timeframes" query for specific exchange to get the list of supported timeframes.
-    Defaults to "1h".
+    Time resolution e.g. "1m", "5m", "1h", "1d", etc. Default: "1h".
     """
-    timeframe: String! = "1h"
+    timeframe: String = "1h"
     """
-    Number of candles to fetch
+    Number of candles. Default: 10.
     """
-    limit: Int = 100
+    limit: Int = 10
   ): Candles
   markets(filter: MarketsFilterInput): [Market]
   ticker(symbol: String!): Ticker
@@ -227,11 +217,16 @@ type Ticker {
 type CandleDataPoint {
   timestamp: String!
   ohlcv: [Float!]
+  open: Float!
+  high: Float!
+  low: Float!
+  close: Float!
+  volume: Float!
 }
 
 type Candles {
   symbol: String
-  timeframe: String
+  start: String
   series: [CandleDataPoint!]
 }
 

@@ -3,7 +3,7 @@ const { buildSchema, parse } = require('graphql')
 const { validate } = require('graphql/validation')
 const { graphqlCcxtSchemaSource } = require('graphql-ccxt')
 
-const { readGraphqlExamples } = require('../examples/graphql/index.js')
+const { readGraphqlExamples } = require('../examples/index.js')
 
 // Keep in sync with defaultQuery documented in README.md
 const defaultQuery = '{ clients { exchange } }'

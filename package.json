@@ -5,13 +5,13 @@
   "main": "src/graphql-ccxt.js",
   "scripts": {
     "ava": "cross-env NODE_PATH=src ava",
-    "example_server": "cross-env NODE_PATH=src node examples/server.js",
+    "demo": "cross-env NODE_PATH=src node demo.js",
     "lint-staged": "lint-staged",
-    "generate:examples/server.js": "markdown2code -l javascript README.md > examples/server.js",
+    "generate:demo.js": "markdown2code -l javascript README.md > demo.js",
     "generate:src/graphql/schema.js": "node src/npm-scripts/generateSchemaJs",
     "postversion": "git push origin v${npm_package_version}; npm publish",
     "postpublish": "git commit -am ':arrow_up: updated version'; git push origin main",
-    "start": "npm run example_server",
+    "start": "npm run demo",
     "test": "npm run ava"
   },
   "repository": {

@@ -2,7 +2,7 @@ const { GraphQLError } = require('graphql')
 
 const { Market } = require('../models/Market.js')
 const { Ticker } = require('../models/Ticker.js')
-const { Candles, CandleDataPoint } = require('../models/Candles.js')
+const { Candles } = require('../models/Candles.js')
 const { ccxtExchangeCapability } = require('./exchangeCapabilities')
 
 class CcxtPublicClient {
@@ -146,11 +146,10 @@ class CcxtPublicClient {
     )
 
     return new Candles({
-      data: {
-        symbol,
-        timeframe,
-        series: data.map((item) => new CandleDataPoint({ data: item }))
-      }
+      symbol,
+      timeframe,
+      start,
+      data
     })
   }
 

@@ -6,9 +6,8 @@ You can read the [graphql-ccxt GraphQL schema source here](https://github.com/fi
 
 ## Features
 
-- Joins together [GraphQL] and [CCXT]: can fetch prices, read balance, open orders, etc. on multiple exchanges at once.
+- Joins together [GraphQL] and [CCXT]: can fetch prices, read balance, open orders, etc.
 - No dependencies other than [graphql](https://www.npmjs.com/package/graphql) and [ccxt](https://www.npmjs.com/package/ccxt) (by the way, installed as peer deps).
-- It's isomorphic! It works on a server as usual (see [demo below](#demo)), but also in a browser (see [examples/browser/ folder](https://github.com/fibo/graphql-ccxt/tree/main/examples/browser)).
 - Last but not least, it can be used to increase your income 💰💰💰
 
 ## Credits
@@ -38,16 +37,16 @@ Then point your browser to http://localhost:4000/graphql
 
 ![query](https://github.com/fibo/graphql-ccxt/raw/main/media/query.png)
 
-Take a look to [examples/graphql/](https://github.com/fibo/graphql-ccxt/tree/main/examples/graphql) folder.
+Take a look to [examples/](https://github.com/fibo/graphql-ccxt/tree/main/examples/) folder.
 It contains both _queries_ and _mutations_, among others:
 
-- [fetch Bitcoin price](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/ticker_01.graphql)
-- [fetch multiple prices, Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/tickers_01.graphql)
-- [fetch your balance](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/balance_01.graphql)
-- [fetch your balance, only Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/balance_02.graphql)
-- [create an order](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrder_01.graphql)
-- [fetch available timeframes](examples/graphql/timeframes_01.graphql)
-- [fetch OHLCV candlesticks](examples/graphql/candles_01.graphql)
+- [fetch Bitcoin price](https://github.com/fibo/graphql-ccxt/blob/main/graphql/ticker_01.graphql)
+- [fetch multiple prices, Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/graphql/tickers_01.graphql)
+- [fetch your balance](https://github.com/fibo/graphql-ccxt/blob/main/graphql/balance_01.graphql)
+- [fetch your balance, only Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/graphql/balance_02.graphql)
+- [create an order](https://github.com/fibo/graphql-ccxt/blob/main/graphql/createOrder_01.graphql)
+- [fetch available timeframes](https://github.com/fibo/graphql-ccxt/blob/main/graphql/timeframes_01.graphql)
+- [fetch OHLCV candlesticks](https://github.com/fibo/graphql-ccxt/blob/main/graphql/candles_01.graphql)
 
 ### Access private API
 
@@ -89,6 +88,7 @@ async function startDemo() {
   await context.addClient({ exchange: 'bitfinex' })
   await context.addClient({ exchange: 'bittrex' })
   await context.addClient({ exchange: 'kraken' })
+  // Add another Binance client, provide a label to disambiguate it.
   await context.addClient({ exchange: 'binance', label: 'Public Binance' })
 
   // 2. Build GraphQL schema.

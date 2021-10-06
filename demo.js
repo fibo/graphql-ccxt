@@ -26,6 +26,7 @@ async function startDemo () {
   await context.addClient({ exchange: 'bitfinex' })
   await context.addClient({ exchange: 'bittrex' })
   await context.addClient({ exchange: 'kraken' })
+  // Add another Binance client, provide a label to disambiguate it.
   await context.addClient({ exchange: 'binance', label: 'Public Binance' })
 
   // 2. Build GraphQL schema.

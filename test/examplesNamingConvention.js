@@ -1,6 +1,6 @@
 const test = require('ava')
 
-const { readGraphqlExamples } = require('../examples/graphql')
+const { readGraphqlExamples } = require('../examples/index.js')
 
 /*
  * Naming convention for graphql examples is

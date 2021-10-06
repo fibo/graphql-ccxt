@@ -7,7 +7,7 @@ function createOrder (input, context) {
     const client = getClient(input.client, context)
     return client.createOrder(input.order)
   } catch (error) {
-    console.log(error)
+    console.error(error)
     throw error
   }
 }

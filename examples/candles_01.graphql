@@ -1,7 +1,6 @@
 {
   client(exchange: "binance") {
     exchange
-    timeframes
     candles(
       symbol: "BTC/USDT"
       timeframe: "1h"
