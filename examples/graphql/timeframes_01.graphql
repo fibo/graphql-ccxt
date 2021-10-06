@@ -9,4 +9,7 @@
   bittrex: client(exchange: "bittrex") {
     timeframes
   }
+  kraken: client(exchange: "kraken") {
+    timeframes
+  }
 }

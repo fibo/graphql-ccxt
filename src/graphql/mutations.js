@@ -12,26 +12,8 @@ function createOrder (input, context) {
   }
 }
 
-async function createOrderMulti ({ list }, context) {
-  const output = []
-
-  for await (const input of list) {
-    try {
-      const client = getClient(input.client, context)
-      const order = await client.createOrder(input.order)
-      output.push({ client, order })
-    } catch (error) {
-      console.error(error)
-      throw error
-    }
-  }
-
-  return output
-}
-
 module.exports = {
   graphqlCcxtMutations: {
-    createOrder,
-    createOrderMulti
+    createOrder
   }
 }

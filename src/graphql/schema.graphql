@@ -51,64 +51,8 @@ input OrderInput {
 """
 Input parameters for fetching OHLCV (candlesticks) data.
 """
-input CandlesFilterInput {
-  """
-  Symbol - stock symbol or currency pair. Use "market" query to get the list of supported symbols for any given exchange.
-  """
+input CandlesInput {
   symbol: String!
-
-  """
-  Timestamp in milliseconds defines the starting date for OHLCV data returned starts since this date.
-  """
-  timestamp: String!
-  """
-  Defines the resolution of data (candle). e.g. "1m", "5m", "1h", "1d", etc.
-  Note that the set of supported timeframes varies beetween exchanges.
-  You can use "timeframes" query for specific exchange to get the list of supported timeframes.
-  Defaults to "1h".
-  """
-  timeframe: String! = "1h"
-  """
-  Number of candles to fetch
-  """
-  limit: Int = 100
-}
-
-# Input types for multiple exchanges
-#######################################################################
-
-input OrderMultiInput {
-  client: ClientKeyInput!
-  order: OrderInput!
-}
-
-input OrdersMultiInput {
-  client: ClientKeyInput!
-  filter: OrdersFilterInput!
-}
-
-input MarketsMultiInput {
-  client: ClientKeyInput!
-  filter: MarketsFilterInput
-}
-
-input TickerMultiInput {
-  client: ClientKeyInput!
-  symbol: String!
-}
-
-input TickersMultiInput {
-  client: ClientKeyInput!
-  symbols: [String!]
-}
-
-input CandlesMultiInput {
-  client: ClientKeyInput!
-  filters: [CandlesFilterInput!]
-}
-
-input TimeframesMultiInput {
-  client: ClientKeyInput!
 }
 
 # Type definitions
@@ -138,10 +82,27 @@ type Client {
   # Public API
   #####################################################################
 
+  candles(
+    symbol: String!
+    """
+    Timestamp in milliseconds defines the starting date for OHLCV data returned starts since this date.
+    """
+    start: String!
+    """
+    Defines the time resolution of data (candle). e.g. "1m", "5m", "1h", "1d", etc.
+    Note that the set of supported timeframes varies beetween exchanges.
+    You can use "timeframes" query for specific exchange to get the list of supported timeframes.
+    Defaults to "1h".
+    """
+    timeframe: String! = "1h"
+    """
+    Number of candles to fetch
+    """
+    limit: Int = 100
+  ): Candles
   markets(filter: MarketsFilterInput): [Market]
   ticker(symbol: String!): Ticker
   tickers(symbols: [String]): [Ticker]
-  candles(filter: CandlesFilterInput!): CandlesResult
   timeframes: [String!]
 
   # Private API
@@ -255,57 +216,15 @@ type Ticker {
   change: Float
 }
 
-type CandlesSuccess {
-  symbol: String
-  timeframe: String
-  timestamp: String
-  series: [Candle!]
-}
-
-type CandlesError {
-  message: String!
-}
-
-type Candle {
+type CandleDataPoint {
   timestamp: String!
   ohlcv: [Float!]
 }
 
-# Type definitions for multiple exchanges
-#######################################################################
-
-type MarketMulti {
-  client: ClientKey!
-  market: Market
+type Candles {
+  symbol: String
+  series: [CandleDataPoint!]
 }
-
-type OrderMulti {
-  client: ClientKey!
-  order: Order
-}
-
-type TickerMulti {
-  client: ClientKey!
-  ticker: Ticker
-}
-
-type TickersMulti {
-  client: ClientKey!
-  tickers: [Ticker]
-}
-
-type TimeframesMulti {
-  client: ClientKey!
-  timeframes: [String]
-}
-
-type CandlesMulti {
-  client: ClientKey!
-  results: CandlesResult
-}
-
-# Errors
-union CandlesResult = CandlesSuccess | CandlesError
 
 # Special types: Query and Mutation
 #######################################################################
@@ -313,25 +232,9 @@ union CandlesResult = CandlesSuccess | CandlesError
 type Query {
   client(exchange: String!, label: String): Client
   clients: [Client]!
-
-  # Public API
-  #####################################################################
-
-  marketsMulti(list: [MarketsMultiInput]): [MarketMulti]
-  tickerMulti(list: [TickerMultiInput]): [TickerMulti]
-  tickersMulti(list: [TickersMultiInput]): [TickersMulti]
-  timeframesMulti(list: [TimeframesMultiInput]): [TimeframesMulti]
-  candlesMulti(list: [CandlesMultiInput]): [CandlesMulti]
-
-  # Private API
-  #####################################################################
-
-  closedOrdersMulti(list: [OrdersMultiInput]): [OrderMulti]
-  openOrdersMulti(list: [OrdersMultiInput]): [OrderMulti]
 }
 
 type Mutation {
   # All mutations are private API
   createOrder(client: ClientKeyInput!, order: OrderInput!): Order
-  createOrderMulti(list: [OrderMultiInput]): [OrderMulti]
 }

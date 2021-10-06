@@ -46,11 +46,8 @@ It contains both _queries_ and _mutations_, among others:
 - [fetch your balance](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/balance_01.graphql)
 - [fetch your balance, only Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/balance_02.graphql)
 - [create an order](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrder_01.graphql)
-- [create orders on multiple exchanges](https://github.com/fibo/graphql-ccxt/blob/main/examples/graphql/createOrderMulti_01.graphql)
 - [fetch available timeframes](examples/graphql/timeframes_01.graphql)
-- [fetch available timeframes for multiple exchanges](examples/graphql/timeframesMulti_01.graphql)
-- [fetch ohlcv candlesticks](examples/graphql/candles_01.graphql)
-- [fetch ohlcv candlesticks for multiple exchanges](examples/graphql/candlesMulti_01.graphql)
+- [fetch OHLCV candlesticks](examples/graphql/candles_01.graphql)
 
 ### Access private API
 

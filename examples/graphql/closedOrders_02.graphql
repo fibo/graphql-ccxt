@@ -1,8 +1,9 @@
 {
   client(exchange: "binance") {
     closedOrders(filter: { symbol: "BTC/BUSD", daysAgo: 10 }) {
-      datetime
       amount
+      symbol
+      datetime
     }
   }
 }

@@ -3,23 +3,14 @@
     exchange
     timeframes
     candles(
-      filter: {
-        symbol: "BTC/USDT"
-        timeframe: "1h"
-        timestamp: "1609632000000"
-        limit: 24
-      }
+      symbol: "BTC/USDT"
+      timeframe: "1h"
+      start: "1609632000000"
+      limit: 24
     ) {
-      ... on CandlesSuccess {
-        timeframe
-        series {
-          ohlcv
-          timestamp
-        }
-      }
-      ... on CandlesError {
-        message
-        __typename
+      series {
+        timestamp
+        ohlcv
       }
     }
   }

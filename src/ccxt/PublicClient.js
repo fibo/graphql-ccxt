@@ -2,7 +2,7 @@ const { GraphQLError } = require('graphql')
 
 const { Market } = require('../models/Market.js')
 const { Ticker } = require('../models/Ticker.js')
-const { Candle, CandlesSuccess, CandlesError } = require('../models/Candle.js')
+const { Candles, CandleDataPoint } = require('../models/Candles.js')
 const { ccxtExchangeCapability } = require('./exchangeCapabilities')
 
 class CcxtPublicClient {
@@ -132,30 +132,26 @@ class CcxtPublicClient {
     return Object.keys(this.ccxtExchange.timeframes)
   }
 
-  async candles ({ filter: { symbol, timeframe, timestamp, limit } }) {
-    try {
-      const method = this._hasCapabilityOrThrow(
-        ccxtExchangeCapability.fetchOHLCV
-      )
-      this._hasTimeframeOrThrow(timeframe)
+  async candles ({ symbol, timeframe, start, limit }) {
+    const method = this._hasCapabilityOrThrow(ccxtExchangeCapability.fetchOHLCV)
+    this._hasTimeframeOrThrow(timeframe)
 
-      // Need to use a String for timestamp otherwise GraphQL will complain with error
+    const data = await this.ccxtExchange[method](
+      symbol,
+      timeframe,
+      // Need to use a String for start timestamp otherwise GraphQL will complain with error
       //     Int cannot represent non 32-bit signed integer value
-      const timestampInt = parseInt(timestamp)
+      parseInt(start),
+      limit
+    )
 
-      const result = await this.ccxtExchange[method](
+    return new Candles({
+      data: {
         symbol,
         timeframe,
-        timestampInt,
-        limit
-      )
-      const series = Object.values(result).map((data) => new Candle({ data }))
-      return new CandlesSuccess({
-        data: { series, symbol, timeframe, timestamp, limit }
-      })
-    } catch (error) {
-      return new CandlesError(error)
-    }
+        series: data.map((item) => new CandleDataPoint({ data: item }))
+      }
+    })
   }
 
   // Follows private APIs, not allowed on public client.
