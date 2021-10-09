@@ -74,22 +74,21 @@ async function startDemo() {
   // //////////////////////////////////////////////////////////////////////////
   const context = new GraphqlCcxtContext()
 
-  // Add a client on Binance exchange.
-  // It will be private if environment variables are defined,
-  // otherwise it will be public.
-  await context.addClient({
-    exchange: 'binance',
-    apiKey: process.env.BINANCE_APIKEY,
-    secret: process.env.BINANCE_APISECRET
-  })
-
-  // Add few public clients on other exchanges.
+  // Add few public clients on some exchanges.
+  await context.addClient({ exchange: 'binance' })
   await context.addClient({ exchange: 'coinbase' })
   await context.addClient({ exchange: 'bitfinex' })
   await context.addClient({ exchange: 'bittrex' })
   await context.addClient({ exchange: 'kraken' })
-  // Add another Binance client, provide a label to disambiguate it.
-  await context.addClient({ exchange: 'binance', label: 'Public Binance' })
+  // Add another Binance client, provide a `label` to disambiguate it.
+  // It will be private if environment variables are defined,
+  // otherwise it will be public.
+  await context.addClient({
+    exchange: 'binance',
+    label: 'My Binance',
+    apiKey: process.env.BINANCE_APIKEY,
+    secret: process.env.BINANCE_APISECRET
+  })
 
   // 2. Build GraphQL schema.
   // //////////////////////////////////////////////////////////////////////////

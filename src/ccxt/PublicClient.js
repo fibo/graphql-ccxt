@@ -112,7 +112,8 @@ class CcxtPublicClient {
 
     const data = await this.ccxtExchange[method](symbol)
 
-    return new Ticker({ data })
+    // return new Ticker({ data })
+    return data
   }
 
   async tickers ({ symbols }) {
