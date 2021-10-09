@@ -1,9 +1,16 @@
-const { Balance } = require('../models/Balance.js')
-const { Order } = require('../models/Order.js')
-const { ccxtExchangeCapability } = require('./exchangeCapabilities')
+const { ccxtExchangeCapability } = require('./exchangeCapabilities.js')
 const { CcxtPublicClient } = require('./PublicClient.js')
 
 class CcxtPrivateClient extends CcxtPublicClient {
+  static filterBalance ({ data: valueOf, filters: { currencies = [] } }) {
+    return Object.keys(valueOf)
+      .filter((currency) => valueOf[currency] > 0)
+      .filter(
+        (currency) => currencies.length === 0 || currencies.includes(currency)
+      )
+      .map((currency) => ({ currency, value: valueOf[currency] }))
+  }
+
   async balance ({ currencies }) {
     const method = this._hasCapabilityOrThrow(
       ccxtExchangeCapability.fetchBalance
@@ -11,10 +18,25 @@ class CcxtPrivateClient extends CcxtPublicClient {
 
     const data = await this.ccxtExchange[method]()
 
-    return new Balance({ data, filters: { currencies } })
+    const { free, used, total } = data
+
+    return {
+      free: CcxtPrivateClient.filterBalance({
+        data: free,
+        filters: { currencies }
+      }),
+      used: CcxtPrivateClient.filterBalance({
+        data: used,
+        filters: { currencies }
+      }),
+      total: CcxtPrivateClient.filterBalance({
+        data: total,
+        filters: { currencies }
+      })
+    }
   }
 
-  async closedOrders ({ filter: { symbol, daysAgo, limit } }) {
+  async closedOrders ({ filter: { symbol, daysAgo, limit, side } }) {
     const method = this._hasCapabilityOrThrow(
       ccxtExchangeCapability.fetchClosedOrders
     )
@@ -23,7 +45,13 @@ class CcxtPrivateClient extends CcxtPublicClient {
 
     const data = await this.ccxtExchange[method](symbol, since, limit)
 
-    return data.map((item) => new Order({ data: item }))
+    return data.filter((item) => {
+      if (typeof side !== 'undefined') {
+        return item.side === side
+      } else {
+        return true
+      }
+    })
   }
 
   async createOrder ({ side, type, symbol, amount, price }) {
@@ -47,7 +75,7 @@ class CcxtPrivateClient extends CcxtPublicClient {
       price
     )
 
-    return new Order({ data })
+    return data
   }
 
   async openOrders ({ filter: { symbol, daysAgo, limit } }) {
@@ -59,7 +87,7 @@ class CcxtPrivateClient extends CcxtPublicClient {
 
     const data = await this.ccxtExchange[method](symbol, since, limit)
 
-    return data.map((item) => new Order({ data: item }))
+    return data
   }
 }
 

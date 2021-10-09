@@ -1,9 +1,10 @@
 {
   client(exchange: "binance", label: "My Binance") {
-    closedOrders(filter: { symbol: "BTC/BUSD" }) {
+    closedOrders(filter: { symbol: "BTC/BUSD", side: buy }) {
       amount
       symbol
       datetime
+      side
     }
   }
 }

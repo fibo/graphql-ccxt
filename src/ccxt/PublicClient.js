@@ -1,9 +1,6 @@
 const { GraphQLError } = require('graphql')
 
-const { Market } = require('../models/Market.js')
-const { Ticker } = require('../models/Ticker.js')
-const { Candles } = require('../models/Candles.js')
-const { ccxtExchangeCapability } = require('./exchangeCapabilities')
+const { ccxtExchangeCapability } = require('./exchangeCapabilities.js')
 
 class CcxtPublicClient {
   constructor ({ ccxtExchange, label }) {
@@ -100,9 +97,6 @@ class CcxtPublicClient {
           return true
         }
       })
-      .map((data) => {
-        return new Market({ data })
-      })
   }
 
   async ticker ({ symbol }) {
@@ -112,7 +106,6 @@ class CcxtPublicClient {
 
     const data = await this.ccxtExchange[method](symbol)
 
-    // return new Ticker({ data })
     return data
   }
 
@@ -123,7 +116,7 @@ class CcxtPublicClient {
 
     const data = await this.ccxtExchange[method](symbols)
 
-    return Object.values(data).map((data) => new Ticker({ data }))
+    return Object.values(data)
   }
 
   timeframes () {
@@ -146,12 +139,22 @@ class CcxtPublicClient {
       limit
     )
 
-    return new Candles({
+    const series = data.map(([timestamp, open, high, low, close, volume]) => ({
+      timestamp,
+      open,
+      high,
+      low,
+      close,
+      volume,
+      ohlcv: [open, high, low, close, volume]
+    }))
+
+    return {
       symbol,
       timeframe,
       start,
-      data
-    })
+      series
+    }
   }
 
   // Follows private APIs, not allowed on public client.

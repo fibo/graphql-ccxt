@@ -1,5 +1,5 @@
 {
-  client(exchange: "binance") {
+  client(exchange: "binance", label: "My Binance") {
     closedOrders(filter: { symbol: "BTC/BUSD", daysAgo: 10 }) {
       amount
       symbol

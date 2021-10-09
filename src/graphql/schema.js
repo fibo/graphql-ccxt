@@ -12,20 +12,20 @@ module.exports = {
 #######################################################################
 
 enum OrderType {
-  LIMIT
-  MARKET
+  limit
+  market
 }
 
 enum OrderSide {
-  BUY
-  SELL
+  buy
+  sell
 }
 
 enum OrderStatus {
-  CANCELED
-  CLOSED
-  EXPIRED
-  OPEN
+  canceled
+  closed
+  expired
+  open
 }
 
 # Input types
@@ -46,6 +46,7 @@ input OrdersFilterInput {
   symbol: String
   daysAgo: Int
   limit: Int
+  side: OrderSide
 }
 
 input OrderInput {
@@ -129,11 +130,11 @@ type Order {
   """
   symbol: String
   """
-  Can be MARKET, LIMIT.
+  Can be market, limit.
   """
   type: OrderType
   """
-  Can be BUY, SELL.
+  Can be buy, sell.
   """
   side: OrderSide
   """
@@ -168,7 +169,7 @@ type Order {
   """
   remaining: Float
   """
-  Can be OPEN, CLOSED, CANCELED, EXPIRED.
+  Can be open, closed, canceled, expired.
   """
   status: OrderStatus
   """

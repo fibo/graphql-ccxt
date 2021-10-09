@@ -12,7 +12,7 @@ function graphqlValidationFailed (queryKey, errors) {
   const numErrors = errors.length
 
   return `
-Query examples/graphql/${queryKey}.graphql has ${numErrors} error${
+Query examples/${queryKey}.graphql has ${numErrors} error${
     numErrors === 1 ? '' : 's'
   }:
 
