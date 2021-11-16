@@ -40,13 +40,13 @@ Then point your browser to http://localhost:4000/graphql
 Take a look to [examples/](https://github.com/fibo/graphql-ccxt/tree/main/examples/) folder.
 It contains both _queries_ and _mutations_, among others:
 
-- [fetch Bitcoin price](https://github.com/fibo/graphql-ccxt/blob/main/graphql/ticker_01.graphql)
-- [fetch multiple prices, Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/graphql/tickers_01.graphql)
-- [fetch your balance](https://github.com/fibo/graphql-ccxt/blob/main/graphql/balance_01.graphql)
-- [fetch your balance, only Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/graphql/balance_02.graphql)
-- [create an order](https://github.com/fibo/graphql-ccxt/blob/main/graphql/createOrder_01.graphql)
-- [fetch available timeframes](https://github.com/fibo/graphql-ccxt/blob/main/graphql/timeframes_01.graphql)
-- [fetch OHLCV candlesticks](https://github.com/fibo/graphql-ccxt/blob/main/graphql/candles_01.graphql)
+- [fetch Bitcoin price](https://github.com/fibo/graphql-ccxt/blob/main/examples/ticker_01.graphql)
+- [fetch multiple prices, Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/examples/tickers_01.graphql)
+- [fetch your balance](https://github.com/fibo/graphql-ccxt/blob/main/examples/balance_01.graphql)
+- [fetch your balance, only Bitcoin and Ethereum](https://github.com/fibo/graphql-ccxt/blob/main/examples/balance_02.graphql)
+- [create an order](https://github.com/fibo/graphql-ccxt/blob/main/examples/createOrder_01.graphql)
+- [fetch available timeframes](https://github.com/fibo/graphql-ccxt/blob/main/examples/timeframes_01.graphql)
+- [fetch OHLCV candlesticks](https://github.com/fibo/graphql-ccxt/blob/main/examples/candles_01.graphql)
 
 ### Access private API
 
